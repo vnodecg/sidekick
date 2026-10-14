@@ -1,6 +1,6 @@
 # RAID log: Risks, Assumptions, Issues, Decisions needed
 
-Last reviewed: 2026-10-13 · Review daily at EOD. Status: `open | mitigating | closed`. Score = Likelihood x Impact (1–3 each).
+Review daily at EOD. Status: `open | mitigating | closed`. Score = Likelihood x Impact (1–3 each).
 
 ## Risks
 
@@ -8,10 +8,10 @@ Last reviewed: 2026-10-13 · Review daily at EOD. Status: `open | mitigating | c
 |---|---|---|---|---|---|---|---|
 | R1 | Bedrock slow/unavailable/throttled; demo stalls | 2 | 3 | 6 | Timeout, retry and fallback (AI-BEDROCK §1, §7); mock mode; pre-recorded backup take of the demo | Eng | open |
 | R2 | SQLite on Lambda loses data | 1 | 2 | 2 | Not deploying to Lambda; README says so; Docker volume | Eng | mitigating |
-| R3 | SDK does not implement spec 2025-11-25 as required | 2 | 3 | 6 | Spike T-003 first; upgrade within v1.x; document negotiated version as friction-log item | Eng | open |
-| R4 | No AWS credits; Bedrock model access not enabled in region | 2 | 3 | 6 | Confirm access Oct 14 (Q1); mock elsewhere; budget cap alarm; calls only for T-011, rehearsal, demo | Eng | open |
+| R3 | SDK does not implement spec 2025-11-25 as required | 2 | 3 | 6 | Spike T-003 first; upgrade within v1.x; document negotiated version as friction-log item | Eng | closed: SDK ^1.32.1 negotiates 2025-11-25 (ADR-002) |
+| R4 | No AWS credits; Bedrock model access not enabled in region | 2 | 3 | 6 | Confirm access early (Q1); mock elsewhere; budget cap alarm; calls only for T-011, rehearsal, demo | Eng | open |
 | R5 | Alexa+ caller identity unknown | 3 | 1 | 3 | Fixed user; `resolveUserId` seam | Eng | mitigating |
-| R6 | Schedule: ~92 P0 h in 9 days | 3 | 3 | 9 | Two people (Q5); freeze Oct 20; cut order in PLAN §4 | PM | open |
+| R6 | Schedule: ~92 P0 h in 9 days | 3 | 3 | 9 | Two people (Q5); freeze at M4; cut order in PLAN §4 | PM | open |
 | R7 | `node:sqlite` is experimental / absent on judge's Node | 2 | 2 | 4 | `engines >=22.13`, startup version check with a clear message, Docker path, driver behind repo seam (ADR-003) | Eng | open |
 | R8 | Web Speech API unsupported (Firefox/Safari) or flaky | 3 | 2 | 6 | Typed fallback is first-class; demo recorded in Chrome | Eng | open |
 | R9 | Rule-based router feels brittle, judges type odd phrases | 2 | 2 | 4 | Fallback to `what_now`; bonus assistant demo shows LLM routing; debug panel; grammar tests | Eng | open |
@@ -39,17 +39,17 @@ Last reviewed: 2026-10-13 · Review daily at EOD. Status: `open | mitigating | c
 
 ## Open questions (from PRD §16 plus new)
 
-| ID | Question | Needed by | Owner | Status / answer |
-|---|---|---|---|---|
-| Q1 | Which Bedrock model and region do we have access to; fastest for short JSON? | Oct 14 | Eng | open; blocks T-011 |
-| Q2 | Does the SDK implement 2025-11-25 over Streamable HTTP? (Python framing in PRD is stale, see ADR-001) | Oct 14 | Eng | open; T-003 |
-| Q3 | Public repo + license (MIT proposed) or private + share? Verify reviewer names vs Amazon list | Oct 21 | PM | open; T-076 |
-| Q4 | Package an Agent Skill too, or MCP server only? | Oct 18 | PM | open; **default: server only** |
-| Q5 | Who is on the team; who is the appointed representative? How many contributors for capacity? | Oct 14 | PM | open |
-| Q6 | Is "Sidekick" free on Devpost, GitHub, Alexa skill store? Fallback name? | Oct 14 | PM | open; T-075 |
-| Q7 | Alexa+ track: does judging require demonstrating an Alexa surface, or is the FAQ path (self-hosted MCP + web client) sufficient? Re-read rules/FAQ once | Oct 15 | PM | open |
-| Q8 | Any budget cap for Bedrock; which AWS account/profile does the demo use? | Oct 14 | PM | open |
-| Q9 | Product Feedback: what exact form/format does Devpost require "for each tool used"? | Oct 18 | PM | open |
+| ID | Question | Owner | Status / answer |
+|---|---|---|---|
+| Q1 | Which Bedrock model and region do we have access to; fastest for short JSON? | Eng | open; blocks T-011 |
+| Q2 | Does the SDK implement 2025-11-25 over Streamable HTTP? (Python framing in PRD is stale, see ADR-001) | Eng | closed: yes since 1.32.1; the lockfile pinned 1.20.2 (ADR-002) |
+| Q3 | Public repo + license (MIT proposed) or private + share? Verify reviewer names vs Amazon list | PM | open; T-076 |
+| Q4 | Package an Agent Skill too, or MCP server only? | PM | open; **default: server only** |
+| Q5 | Who is on the team; who is the appointed representative? How many contributors for capacity? | PM | open |
+| Q6 | Is "Sidekick" free on Devpost, GitHub, Alexa skill store? Fallback name? | PM | open; T-075 |
+| Q7 | Alexa+ track: does judging require demonstrating an Alexa surface, or is the FAQ path (self-hosted MCP + web client) sufficient? Re-read rules/FAQ once | PM | open |
+| Q8 | Any budget cap for Bedrock; which AWS account/profile does the demo use? | PM | open |
+| Q9 | Product Feedback: what exact form/format does Devpost require "for each tool used"? | PM | open |
 
 ## Issues
 

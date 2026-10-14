@@ -126,7 +126,7 @@ Target (not a gate): `core/` and `ai/` >= 90% lines, `tools/` >= 80%. Tracked wi
 
 ## 5. Live Bedrock check (opt-in)
 
-`SIDEKICK_LIVE=1 npm run test:bedrock`: 5 diverse tasks; asserts validity and records latency to stdout. Used for T-011 (model choice, `LATENCY.md`) and a pre-demo smoke run on Oct 21.
+`SIDEKICK_LIVE=1 npm run test:bedrock`: 5 diverse tasks; asserts validity and records latency to stdout. Used for T-011 (model choice, `LATENCY.md`) and a pre-demo smoke run.
 
 ## 6. Manual checklist (T-024, pre-freeze, pre-video)
 

@@ -13,8 +13,8 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['tests/*.ts', 'tests/*.test.ts', 'tests/helpers/*.ts'],
-          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 10,
+          allowDefaultProject: ['tests/*.ts', 'tests/*.test.ts', 'tests/*/*.ts'],
+          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 30,
         },
         tsconfigRootDir: import.meta.dirname,
       },
@@ -149,6 +149,9 @@ export default tseslint.config(
         }
       ],
       
+      // Logging goes through core/log.ts only (privacy: no user content in logs)
+      'no-console': 'error',
+
       // Disallow all comments
       'no-warning-comments': 'error',
       'no-inline-comments': 'error',
@@ -236,14 +239,21 @@ export default tseslint.config(
     }
   },
   {
+    // Declarative DDL repeats column names by design
+    files: ['src/db/schema.ts'],
+    rules: {
+      'sonarjs/no-duplicate-string': 'off',
+    }
+  },
+  {
     // Allow default exports for registerable modules
-    files: ['src/tools/*.ts', 'src/resources/*.ts', 'src/prompts/*.ts'],
+    files: ['src/tools/*.ts', 'src/resources/*.ts', 'src/prompts/*.ts', 'tests/fixtures/*.ts'],
     rules: {
       'import/no-default-export': 'off',
     }
   },
   {
     // Ignore build output and common directories
-    ignores: ['build/**', 'dist/**', 'node_modules/**', 'coverage/**', 'docs/**', 'eslint.config.mjs', 'dev.js', '_templates/**'],
+    ignores: ['build/**', 'dist/**', 'node_modules/**', 'coverage/**', 'docs/**', 'eslint.config.mjs', 'drizzle.config.ts', 'dev.js', '_templates/**', 'tests/helpers/*.mjs'],
   }
 );

@@ -19,6 +19,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV STARTER_TRANSPORT=http
 ENV PORT=3000
+ENV SIDEKICK_HOST=0.0.0.0
 
 # Copy built files and production dependencies
 COPY --from=build /app/build ./build

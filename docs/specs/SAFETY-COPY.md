@@ -8,7 +8,7 @@ Status: Draft v1 · Implements AC1, AC2, PRD §5, §11 · Code: `core/reply.ts`,
 |---|---|
 | 1 to 3 sentences | split on `[.!?]` followed by space or end; ellipses count once; count in 1..3 |
 | Plain text | no `* # _ \` > [ ] ( ) |`, no leading `-` or `1.`; no emoji; no newlines |
-| Short | each sentence <= 25 words (warn in tests, hard fail at 40) |
+| Short | each sentence <= 25 words (copy-review guideline, T-052); `speak()` hard-fails at 40 |
 | Speakable | digits allowed; no URLs, no ids, no JSON |
 | One question max | at most one `?` |
 
@@ -71,6 +71,6 @@ Tools may repeat the user's own words (step text, parked note, dump items). To k
 |---|---|---|
 | Task text | Bedrock | Sent only for `break_down_task`; nothing else; no user id |
 | User content | SQLite | Local file only; `delete_my_data` erases |
-| Logs | stderr JSON lines | `{ts, tool, ok, ms, errClass?}`. Lint rule: no `console.*` outside `core/log.ts` |
+| Logs | stderr JSON lines | `{ts, event, tool?, ok?, ms?, errClass?}` (plus `module`/`detail` for startup diagnostics only). Lint rule: no `console.*` outside `core/log.ts` |
 | `ai_calls` | SQLite | model, attempt, success, error class, latency. No text |
 | Telemetry | none | no third-party analytics |

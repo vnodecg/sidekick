@@ -11,7 +11,7 @@ Status: Draft v1 · Tracks PRD §14 · Owner: PM · Tasks T-070..T-077, T-091
 - [ ] Track declared: **Alexa+** and **AWS Builder mini challenge**, Bedrock usage described. T-072
 - [ ] Product Feedback for each tool used. T-073
 - [ ] Optional: feature requests and friction-log entries (up to +10% Stage Two). T-073
-- [ ] Runnable by judges Nov 9–20. T-070, [PLAN.md](PLAN.md) §7
+- [ ] Runnable by judges through the judging period. T-070, [PLAN.md](PLAN.md) §7
 - [ ] Devpost confirmation saved. T-077
 
 ## 2. Submission text outline
@@ -51,13 +51,13 @@ Evidence:            <link, command, request id>
 Time lost:           <minutes>
 ```
 
-Pre-seed entries while building (log as you go in `docs/plan/FRICTION.md`, created on first entry), not on Oct 21:
+Pre-seed entries while building (log as you go in `docs/plan/FRICTION.md`, created on first entry), not at the end:
 - Bedrock Converse: forced `toolChoice` support per model; cold-start and p50/p95 latency; region/model access flow (Q1).
-- MCP SDK: protocol version negotiation vs 2025-11-25 (T-003); `server.tool` vs `registerTool`; single shared transport in the starter.
+- MCP SDK: protocol version negotiation vs 2025-11-25 (T-003); `server.tool` vs `registerTool`; single shared transport in the starter. Details: ADR-002 result and [FRICTION.md](FRICTION.md).
 - Alexa+: preview limitation, caller identity not exposed, no way for an individual developer to attach tools.
 - Plus one entry per Sidekick tool group stating how its description was written for an LLM router.
 
-## 5. Final pre-submit checks (Oct 22)
+## 5. Final pre-submit checks (buffer day)
 
 - [ ] Clean clone on another machine: `npm ci && npm start`, hero flow works (mock), and with Bedrock
 - [ ] README commands copy-paste correctly

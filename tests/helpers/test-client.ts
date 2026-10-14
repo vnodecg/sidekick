@@ -2,7 +2,7 @@ import assert from "node:assert";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { StdioClientTransport, getDefaultEnvironment } from "@modelcontextprotocol/sdk/client/stdio.js";
 import type { 
   CallToolResult, 
   ListToolsResult,
@@ -21,6 +21,7 @@ export type TestClientConfig = {
   capabilities?: Record<string, unknown>;
   serverPath?: string;
   stderr?: "pipe" | "ignore";
+  env?: Record<string, string>;
 }
 
 export class TestClient {
@@ -35,6 +36,7 @@ export class TestClient {
       capabilities: config.capabilities ?? {},
       stderr: config.stderr ?? "ignore",
       serverPath: config.serverPath,
+      env: config.env,
     };
   }
 
@@ -56,6 +58,7 @@ export class TestClient {
       command: "node",
       args: [serverPath],
       stderr: this.config.stderr ?? "ignore",
+      env: { ...getDefaultEnvironment(), SIDEKICK_MOCK_AI: "1", SIDEKICK_DB_PATH: ":memory:", NODE_ENV: "test", ...this.config.env },
     });
 
     await this.client.connect(this.transport);
@@ -81,6 +84,10 @@ export class TestClient {
       throw new Error("Client not initialized. Call setup() first.");
     }
     return this.client.listTools();
+  }
+
+  getServerVersion(): { name: string; version: string } | undefined {
+    return this.client?.getServerVersion();
   }
 
   async listResources(): Promise<ListResourcesResult> {

@@ -1,6 +1,6 @@
 # Sidekick: Product Requirements Document
 
-**Status:** Draft v1 · **Date:** 2026-10-13 · **Target:** Amazon Developer Hackathon, Alexa+ track + AWS Builder mini challenge · **Deadline:** 2026-10-23, 12:00pm PDT (12:30am IST, Oct 24). Plan to submit by Oct 22.
+**Status:** Draft v1 · **Target:** Amazon Developer Hackathon, Alexa+ track + AWS Builder mini challenge
 
 > Frozen copy of the original PRD. Engineering interpretation and gap-fill lives in the specs; conflicts are logged in [../plan/RAID.md](../plan/RAID.md).
 > Known stale text: the PRD's references to the "Python MCP SDK" and `mcp<2` are superseded by [ADR-001](../architecture/DECISIONS.md) (TypeScript).
@@ -163,15 +163,15 @@ For the hackathon (judged on tech implementation, design, potential impact and q
 
 ## 13. Milestones
 
-| Date | Milestone |
-| --- | --- |
-| Oct 14–15 | Bedrock-backed `break_down_task` with validation, fallback and mock mode |
-| Oct 16–17 | Web MCP client and `/mcp` Streamable HTTP endpoint |
-| Oct 18–19 | Tests, safety wording checks, `delete_my_data` |
-| Oct 20 | Feature freeze |
-| Oct 21 | Demo video, README, license |
-| Oct 22 | Submit (buffer day) |
-| Oct 23, 12:00pm PDT | Hard deadline |
+| Milestone |
+| --- |
+| Bedrock-backed `break_down_task` with validation, fallback and mock mode |
+| Web MCP client and `/mcp` Streamable HTTP endpoint |
+| Tests, safety wording checks, `delete_my_data` |
+| Feature freeze |
+| Demo video, README, license |
+| Submit (buffer day) |
+| Hard deadline |
 
 ## 14. Submission checklist
 
@@ -181,7 +181,7 @@ For the hackathon (judged on tech implementation, design, potential impact and q
 - [ ] Track declared as Alexa+ and the AWS Builder mini challenge, with Bedrock usage described
 - [ ] Product Feedback for each tool used
 - [ ] Optional: feature requests and friction log entries (can add up to 10% to the Stage Two score)
-- [ ] Runnable by judges through the judging period (Nov 9–20)
+- [ ] Runnable by judges through the judging period
 
 ## 15. Risks
 
@@ -192,7 +192,7 @@ For the hackathon (judged on tech implementation, design, potential impact and q
 | MCP spec version | Entry must implement spec 2025-11-25; the prototype pins `mcp<2` | Check the SDK against the spec before building the client |
 | No AWS credits | Real Bedrock calls cost money | Mock in development; real calls only for testing and the demo |
 | Alexa+ caller identity unknown | Cannot separate data per user | One fixed user in v1; `user_id` already in every table |
-| Short schedule | Scope creeps past the deadline | Freeze Oct 20; cut P1 items first |
+| Short schedule | Scope creeps past the deadline | Freeze at the feature-freeze milestone; cut P1 items first |
 
 ## 16. Open questions
 

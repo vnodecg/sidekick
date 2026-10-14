@@ -31,5 +31,5 @@ Single source of truth for building Sidekick. Read in this order.
 - **Definition of done (every task):** code merged, `npm run lint && npm run typecheck && npm test` green,
   linked test cases pass, spec updated if behaviour changed, no `console.log` of user content.
 - **Priorities:** P0 demo-critical, P1 if time allows, cut P1 first.
-- **Dates** are 2026; schedule and deadlines live in [plan/PLAN.md](plan/PLAN.md).
+- Schedule and milestones live in [plan/PLAN.md](plan/PLAN.md).
 - Items marked **PROPOSED** are engineering assumptions where the PRD is silent; they are tracked in RAID.md as `A#`/`Q#` until confirmed.

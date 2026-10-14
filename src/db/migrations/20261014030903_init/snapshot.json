@@ -1,0 +1,900 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "00bef536-6b39-4540-a4ca-62e3bb41531a",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "ddl": [
+    {
+      "name": "ai_calls",
+      "entityType": "tables"
+    },
+    {
+      "name": "dopamine",
+      "entityType": "tables"
+    },
+    {
+      "name": "dump",
+      "entityType": "tables"
+    },
+    {
+      "name": "focus",
+      "entityType": "tables"
+    },
+    {
+      "name": "parked",
+      "entityType": "tables"
+    },
+    {
+      "name": "routines",
+      "entityType": "tables"
+    },
+    {
+      "name": "tasks",
+      "entityType": "tables"
+    },
+    {
+      "name": "wins",
+      "entityType": "tables"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "model",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "attempt",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "success",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "error_class",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "latency_ms",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "ai_calls"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "dopamine"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "dopamine"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "idea",
+      "entityType": "columns",
+      "table": "dopamine"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "false",
+      "generated": null,
+      "name": "is_default",
+      "entityType": "columns",
+      "table": "dopamine"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "last_used_at",
+      "entityType": "columns",
+      "table": "dopamine"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "dopamine"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "dump"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "dump"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "text",
+      "entityType": "columns",
+      "table": "dump"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "dump"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "archived_at",
+      "entityType": "columns",
+      "table": "dump"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "focus"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "focus"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "label",
+      "entityType": "columns",
+      "table": "focus"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "planned_minutes",
+      "entityType": "columns",
+      "table": "focus"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "started_at",
+      "entityType": "columns",
+      "table": "focus"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "ended_at",
+      "entityType": "columns",
+      "table": "focus"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "parked"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "parked"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "note",
+      "entityType": "columns",
+      "table": "parked"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "parked"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "routines"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "routines"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "routines"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "time_of_day",
+      "entityType": "columns",
+      "table": "routines"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "last_done_on",
+      "entityType": "columns",
+      "table": "routines"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "routines"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "archived_at",
+      "entityType": "columns",
+      "table": "routines"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "parent_id",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "0",
+      "generated": null,
+      "name": "position",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'open'",
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "source",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "completed_at",
+      "entityType": "columns",
+      "table": "tasks"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "wins"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "wins"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "kind",
+      "entityType": "columns",
+      "table": "wins"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "text",
+      "entityType": "columns",
+      "table": "wins"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "ref_id",
+      "entityType": "columns",
+      "table": "wins"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "wins"
+    },
+    {
+      "columns": [
+        "user_id",
+        "parent_id"
+      ],
+      "tableTo": "tasks",
+      "columnsTo": [
+        "user_id",
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_tasks_user_id_parent_id_tasks_user_id_id_fk",
+      "entityType": "fks",
+      "table": "tasks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "ai_calls_pk",
+      "table": "ai_calls",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "dopamine_pk",
+      "table": "dopamine",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "dump_pk",
+      "table": "dump",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "focus_pk",
+      "table": "focus",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "parked_pk",
+      "table": "parked",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "routines_pk",
+      "table": "routines",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "tasks_pk",
+      "table": "tasks",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "wins_pk",
+      "table": "wins",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        },
+        {
+          "value": "\"created_at\" desc",
+          "isExpression": true
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "ai_calls_user_created",
+      "entityType": "indexes",
+      "table": "ai_calls"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        },
+        {
+          "value": "last_used_at",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "dopamine_user_used",
+      "entityType": "indexes",
+      "table": "dopamine"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        },
+        {
+          "value": "\"created_at\" desc",
+          "isExpression": true
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "dump_user_created",
+      "entityType": "indexes",
+      "table": "dump"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": "\"focus\".\"ended_at\" is null",
+      "origin": "manual",
+      "name": "focus_one_open",
+      "entityType": "indexes",
+      "table": "focus"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        },
+        {
+          "value": "\"created_at\" desc",
+          "isExpression": true
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "parked_user_created",
+      "entityType": "indexes",
+      "table": "parked"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": "\"routines\".\"archived_at\" is null",
+      "origin": "manual",
+      "name": "routines_user",
+      "entityType": "indexes",
+      "table": "routines"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        },
+        {
+          "value": "parent_id",
+          "isExpression": false
+        },
+        {
+          "value": "status",
+          "isExpression": false
+        },
+        {
+          "value": "position",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "tasks_user_parent_status",
+      "entityType": "indexes",
+      "table": "tasks"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        },
+        {
+          "value": "status",
+          "isExpression": false
+        },
+        {
+          "value": "\"updated_at\" desc",
+          "isExpression": true
+        }
+      ],
+      "isUnique": false,
+      "where": "\"tasks\".\"parent_id\" is null",
+      "origin": "manual",
+      "name": "tasks_user_active",
+      "entityType": "indexes",
+      "table": "tasks"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        },
+        {
+          "value": "\"created_at\" desc",
+          "isExpression": true
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "wins_user_created",
+      "entityType": "indexes",
+      "table": "wins"
+    },
+    {
+      "columns": [
+        "user_id",
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "tasks_user_id_id_unique",
+      "entityType": "uniques",
+      "table": "tasks"
+    },
+    {
+      "value": "\"success\" in (0, 1)",
+      "name": "ai_calls_success",
+      "entityType": "checks",
+      "table": "ai_calls"
+    },
+    {
+      "value": "\"is_default\" in (0, 1)",
+      "name": "dopamine_is_default",
+      "entityType": "checks",
+      "table": "dopamine"
+    },
+    {
+      "value": "\"planned_minutes\" is null or \"planned_minutes\" between 1 and 240",
+      "name": "focus_planned_minutes",
+      "entityType": "checks",
+      "table": "focus"
+    },
+    {
+      "value": "\"ended_at\" is null or \"ended_at\" >= \"started_at\"",
+      "name": "focus_ended_after_started",
+      "entityType": "checks",
+      "table": "focus"
+    },
+    {
+      "value": "\"time_of_day\" is null or \"time_of_day\" glob '[01][0-9]:[0-5][0-9]' or \"time_of_day\" glob '2[0-3]:[0-5][0-9]'",
+      "name": "routines_time_of_day",
+      "entityType": "checks",
+      "table": "routines"
+    },
+    {
+      "value": "\"last_done_on\" is null or \"last_done_on\" glob '[0-9][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]'",
+      "name": "routines_last_done_on",
+      "entityType": "checks",
+      "table": "routines"
+    },
+    {
+      "value": "\"status\" in ('open', 'done', 'archived')",
+      "name": "tasks_status",
+      "entityType": "checks",
+      "table": "tasks"
+    },
+    {
+      "value": "\"source\" is null or \"source\" in ('ai', 'fallback', 'mock')",
+      "name": "tasks_source",
+      "entityType": "checks",
+      "table": "tasks"
+    },
+    {
+      "value": "(\"parent_id\" is null and \"position\" = 0) or (\"parent_id\" is not null and \"position\" >= 1)",
+      "name": "tasks_position",
+      "entityType": "checks",
+      "table": "tasks"
+    },
+    {
+      "value": "\"parent_id\" is null or \"source\" is null",
+      "name": "tasks_source_on_parent_only",
+      "entityType": "checks",
+      "table": "tasks"
+    },
+    {
+      "value": "(\"status\" = 'done') = (\"completed_at\" is not null)",
+      "name": "tasks_done_has_completed_at",
+      "entityType": "checks",
+      "table": "tasks"
+    },
+    {
+      "value": "\"kind\" in ('step', 'task', 'focus', 'routine', 'manual')",
+      "name": "wins_kind",
+      "entityType": "checks",
+      "table": "wins"
+    }
+  ],
+  "renames": []
+}

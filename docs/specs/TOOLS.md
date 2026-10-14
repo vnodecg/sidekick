@@ -10,7 +10,7 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 - **Annotations:** `readOnlyHint` true for reads; `destructiveHint` true only for `delete_my_data`; `idempotentHint` where noted.
 - **Free-text inputs** (`task`, `thought`, `note`, `label`, `text`, `name`, `idea`) go through `safety.screen()` first and are capped at 280 chars (task 500).
 - **Active task** = the open parent task with the latest `updated_at`. Defined once in `repos/tasks.ts`.
-- **Time phrases** come from `timewords.ts`: under 1 min "less than a minute", then "N minutes", then "about N hours".
+- **Time phrases** come from `timewords.ts`: under 1 min "less than a minute", then "N minutes", then "about N hours" (up to 47), then "about N days".
 - Samples below are examples of the reply template, not fixtures; tests assert rules, plus a few exact strings marked (exact).
 
 ## 1. Task initiation

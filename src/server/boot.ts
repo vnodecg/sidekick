@@ -2,69 +2,64 @@ import { randomUUID } from "node:crypto";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import cors from "cors";
-import { config } from "dotenv";
+import { ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import express from "express";
 import { autoRegisterModules } from "../registry/auto-loader.js";
+import type { AppContext } from "../context.js";
 
-type TransportMode = "stdio" | "http";
+/*
+ * McpServer only installs tools/list once a tool is registered. A server whose
+ * modules all failed to load should still answer with an empty list, not a
+ * "method not found" protocol error.
+ */
+function ensureToolsCapability(server: McpServer): void {
+  try {
+    server.server.assertCanSetRequestHandler("tools/list");
+  } catch {
+    return;
+  }
+  server.server.registerCapabilities({ tools: { listChanged: false } });
+  server.server.setRequestHandler(ListToolsRequestSchema, () => ({ tools: [] }));
+}
 
-// Load environment variables from .env file
-config();
-
-export async function boot(
-  mode?: TransportMode
-): Promise<void> {
-  const transportMode = mode ?? (process.env.STARTER_TRANSPORT as TransportMode | undefined) ?? "stdio";
+export async function boot(ctx: AppContext): Promise<void> {
+  const { config, log } = ctx;
   const server = new McpServer({
     name: "sidekick",
-    version: "1.0.0",
+    version: config.version,
   });
 
-  await autoRegisterModules(server);
+  await autoRegisterModules(server, ctx);
+  ensureToolsCapability(server);
+  process.on("exit", () => {
+    ctx.db.$client.close();
+  });
 
-  if (transportMode === "stdio") {
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-    console.error("Sidekick running on stdio");
+  if (config.transport === "stdio") {
+    await server.connect(new StdioServerTransport());
+    log({ event: "listening", detail: "stdio" });
     return;
   }
 
-  // HTTP mode with SSE support
   const app = express();
   app.use(express.json({ limit: "1mb" }));
 
-  const corsOrigin = process.env.CORS_ORIGIN ?? "*";
-  app.use(cors({ 
-    origin: corsOrigin,
-    credentials: true,
-    methods: ["GET", "POST", "OPTIONS", "DELETE"],
-    allowedHeaders: ["Content-Type", "x-mcp-session", "x-mcp-session-id"],
-    exposedHeaders: ["x-mcp-session-id"]
-  }));
-
-  // Create transport with session support
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: () => randomUUID()
   });
 
   await server.connect(transport);
 
-  // Handle all MCP requests (GET for SSE, POST for JSON-RPC, DELETE for cleanup)
   app.all("/mcp", (req, res) => {
     void transport.handleRequest(req, res, req.body);
   });
 
-  const port = Number(process.env.PORT ?? 3000);
-  const httpServer = app.listen(port, () => {
-    console.log(`Sidekick (HTTP) listening on http://localhost:${String(port)}/mcp`);
-    console.log(`SSE endpoint: GET http://localhost:${String(port)}/mcp`);
-    console.log(`JSON-RPC endpoint: POST http://localhost:${String(port)}/mcp`);
-    console.log(`CORS origin: ${corsOrigin}`);
+  const httpServer = app.listen(config.port, config.host, () => {
+    log({ event: "listening", detail: `http://${config.host}:${String(config.port)}/mcp` });
   });
 
   process.on("SIGINT", () => {
-    console.log("Shutting down HTTP server...");
+    log({ event: "shutdown" });
     void transport.close();
     httpServer.close(() => {
       process.exit(0);

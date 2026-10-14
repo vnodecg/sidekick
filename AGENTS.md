@@ -13,8 +13,9 @@ Sidekick is a voice-first ADHD assistant: a self-hosted [MCP](https://modelconte
 | `npm run build` | Compile to `build/` (required before `dev`, `inspect`, `serve:*`) |
 | `npm run typecheck` | Type-check without emitting |
 | `npm run lint` / `lint:fix` | ESLint (strict, type-checked) |
-| `npm test` | All tests (Node native runner); one file: `node --test tests/<name>.test.ts` |
+| `npm test` | All tests (Node native runner, run `npm run build` first: black-box tests spawn `build/index.js`); one file: `node --import ./tests/helpers/register-ts.mjs --test tests/<name>.test.ts` |
 | `npm run knip` | Find unused files, exports and dependencies |
+| `npm run db:generate` | Generate a migration from `src/db/schema.ts` (review the SQL, commit it) |
 | `npm run dev` / `inspect` | REPL / MCP Inspector for manual protocol testing |
 | `npm run gen:tool` / `gen:prompt` / `gen:resource` | Hygen generators (module plus test) |
 
@@ -25,6 +26,7 @@ Before finishing any task, run `npm run lint && npm run typecheck && npm test`. 
 - `src/index.ts` is the entry point; `src/server/boot.ts` wires transport and registry.
 - `src/registry/` auto-discovers modules in `src/tools/`, `src/resources/`, `src/prompts/`. Drop a file in the right directory; do not register by hand.
 - Every module default-exports a `RegisterableModule` (`src/registry/types.ts`).
+- Data access is Drizzle (`src/db/schema.ts` is the schema; repos use the typed query builder, raw `sql` only for constraints and partial indexes). Never hand-edit `src/db/migrations/`.
 - Inputs are validated with Zod. Never trust unvalidated input.
 - Only `break_down_task` may call Bedrock, and only task text may leave the process.
 
@@ -44,6 +46,7 @@ Keep code clean, DRY and minimal.
 ## Testing
 
 - Node native test runner, no extra frameworks. Tests live in `tests/` and mirror `src/`.
+- Tests import `src/` with `.js` specifiers; `tests/helpers/register-ts.mjs` maps them to the `.ts` sources. Build dependencies with `makeContext()` (real `createContext`, in-memory DB, fixed clock, captured log lines); never mock `process.stderr`.
 - Use helpers in `tests/helpers/` (`withTestClient`, `assertToolResponse`, `assertToolError`) rather than duplicating setup.
 - Every new tool, resource or prompt ships with a test. Cover the failure path, not only the happy path.
 - Default test runs must not call AWS. Use mock AI mode (`SIDEKICK_MOCK_AI=1`).
