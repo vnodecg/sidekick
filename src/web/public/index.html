@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Sidekick: a voice-first assistant that gets you started, one tiny step at a time." />
+    <meta name="color-scheme" content="light dark" />
+    <title>Sidekick</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body data-state="idle">
+    <header class="bar">
+      <h1>Sidekick</h1>
+      <button id="mute" type="button" aria-pressed="false">Mute</button>
+    </header>
+
+    <main>
+      <p id="hero" class="hero" aria-live="polite">Tap the mic and tell me what you need.</p>
+
+      <button id="mic" class="mic" type="button" aria-pressed="false" aria-label="Talk to Sidekick">
+        <span class="mic-dot" aria-hidden="true"></span>
+      </button>
+
+      <form id="typed" class="typed" autocomplete="off">
+        <label for="utterance" class="note" id="speech-note">Or type here. Press / to jump to this box.</label>
+        <div class="typed-row">
+          <input id="utterance" name="utterance" type="text" maxlength="500" enterkeyhint="send" />
+          <button type="submit">Send</button>
+        </div>
+      </form>
+
+      <p id="focus-clock" class="clock" hidden>focus <span id="focus-time">00:00</span></p>
+    </main>
+
+    <details id="drawer" class="drawer">
+      <summary>Tool calls (for judges)</summary>
+      <div class="scroll" role="region" aria-label="Tool call log" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Call</th>
+            <th scope="col">Status</th>
+            <th scope="col">Time</th>
+            <th scope="col">Source</th>
+          </tr>
+        </thead>
+        <tbody id="trace-rows"></tbody>
+      </table>
+      </div>
+    </details>
+  </body>
+</html>

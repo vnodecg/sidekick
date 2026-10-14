@@ -45,8 +45,9 @@ src/
   index.ts                  entry (unchanged)
   config.ts                 zod-validated env, single source of config
   server/
-    boot.ts                 stdio | http; http = session map, Origin check, static files, /healthz
-    sessions.ts             per-session McpServer + transport lifecycle
+    boot.ts                 stdio | http wiring, listen, graceful shutdown
+    http.ts                 Express app: Origin/CORS guard, body limits, /healthz, static files, /mcp routes
+    sessions.ts             per-session McpServer + transport lifecycle (cap, idle sweep, 404 for unknown ids)
   core/
     clock.ts                injectable now(); UTC epoch seconds; local-date helper
     user.ts                 resolveUserId(ctx) -> "default" (seam for Alexa+ identity)
@@ -154,7 +155,7 @@ AWS credentials use the SDK default chain; Sidekick never reads or logs them.
 ## 7. Deployment
 
 - **Judge/dev path:** `npm ci && npm start` (build then HTTP on 127.0.0.1:3000). Web client at `/`, MCP at `/mcp`.
-- **Docker:** existing `Dockerfile`/`docker-compose.yml` adapted: volume for `data/`, env passthrough.
+- **Docker:** `docker compose up` serves the UI in mock mode on `127.0.0.1:3000` with the database in the `sidekick-data` volume (`/data`). `docker compose --profile bedrock up sidekick-bedrock` passes `AWS_REGION`, `SIDEKICK_BEDROCK_MODEL_ID` and the AWS credential variables through from the host. Image: Node 22 alpine, runs as `node`, health check on `/healthz`.
 - **Not Lambda** (PRD risk R2): ephemeral storage. Documented in README.
 - **Exposing to a remote assistant:** put behind a tunnel or reverse proxy, set `SIDEKICK_AUTH_TOKEN` and `SIDEKICK_ALLOWED_ORIGINS`. Not required for the demo.
 

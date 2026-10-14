@@ -134,3 +134,15 @@ describe("im_stuck", () => {
     assert.notStrictEqual(first, second);
   });
 });
+
+describe("taskOpen meta (web router state)", () => {
+  it("tracks whether a task is open across the step tools", async () => {
+    const { tool } = await setup();
+    assert.strictEqual((await tool.call("next_step")).meta?.taskOpen, false);
+    assert.strictEqual((await tool.call("complete_step")).meta?.taskOpen, false);
+    assert.strictEqual((await tool.call("break_down_task", { task: "tidy" })).meta?.taskOpen, true);
+    assert.strictEqual((await tool.call("next_step")).meta?.taskOpen, true);
+    for (let i = 0; i < 4; i += 1) assert.strictEqual((await tool.call("complete_step")).meta?.taskOpen, true);
+    assert.strictEqual((await tool.call("complete_step")).meta?.taskOpen, false);
+  });
+});

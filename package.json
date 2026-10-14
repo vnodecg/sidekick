@@ -7,7 +7,7 @@
   "scripts": {
     "test": "node --import ./tests/helpers/register-ts.mjs --test \"tests/**/*.test.ts\"",
     "test:watch": "node --import ./tests/helpers/register-ts.mjs --test --watch \"tests/**/*.test.ts\"",
-    "build": "tsc && rm -rf build/db/migrations && cp -r src/db/migrations build/db/ && chmod 755 build/index.js",
+    "build": "tsc && rm -rf build/db/migrations && cp -r src/db/migrations build/db/ && rm -rf build/web && cp -r src/web build/web && chmod 755 build/index.js",
     "db:generate": "drizzle-kit generate",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

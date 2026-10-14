@@ -1,11 +1,15 @@
-import { randomUUID } from "node:crypto";
+import { createServer } from "node:http";
+import { fileURLToPath } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
-import express from "express";
+import { createHttpApp } from "./http.js";
+import { createSessions } from "./sessions.js";
 import { autoRegisterModules } from "../registry/auto-loader.js";
 import type { AppContext } from "../context.js";
+import type { Server } from "node:http";
+
+const STATIC_DIR = fileURLToPath(new URL("../web/public", import.meta.url));
 
 /*
  * McpServer only installs tools/list once a tool is registered. A server whose
@@ -22,47 +26,61 @@ function ensureToolsCapability(server: McpServer): void {
   server.server.setRequestHandler(ListToolsRequestSchema, () => ({ tools: [] }));
 }
 
-export async function boot(ctx: AppContext): Promise<void> {
-  const { config, log } = ctx;
-  const server = new McpServer({
-    name: "sidekick",
-    version: config.version,
-  });
-
+async function createMcpServer(ctx: AppContext): Promise<McpServer> {
+  const server = new McpServer({ name: "sidekick", version: ctx.config.version });
   await autoRegisterModules(server, ctx);
   ensureToolsCapability(server);
+  return server;
+}
+
+function listen(server: Server, port: number, host: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(port, host, () => {
+      server.off("error", reject);
+      resolve();
+    });
+  });
+}
+
+function closeHttp(server: Server): Promise<void> {
+  return new Promise((resolve) => {
+    server.close(() => {
+      resolve();
+    });
+    server.closeAllConnections();
+  });
+}
+
+async function bootHttp(ctx: AppContext): Promise<void> {
+  const { config, log, clock } = ctx;
+  const sessions = createSessions({ createServer: () => createMcpServer(ctx), clock, log });
+  const httpServer = createServer(createHttpApp({ ctx, sessions, staticDir: STATIC_DIR }));
+  await listen(httpServer, config.port, config.host);
+  log({ event: "listening", detail: `http://${config.host}:${String(config.port)}/mcp` });
+
+  const shutdown = (): void => {
+    log({ event: "shutdown" });
+    void sessions
+      .closeAll()
+      .then(() => closeHttp(httpServer))
+      .then(() => {
+        process.exit(0);
+      });
+  };
+  process.once("SIGINT", shutdown);
+  process.once("SIGTERM", shutdown);
+}
+
+export async function boot(ctx: AppContext): Promise<void> {
   process.on("exit", () => {
     ctx.db.$client.close();
   });
 
-  if (config.transport === "stdio") {
-    await server.connect(new StdioServerTransport());
-    log({ event: "listening", detail: "stdio" });
+  if (ctx.config.transport === "stdio") {
+    await (await createMcpServer(ctx)).connect(new StdioServerTransport());
+    ctx.log({ event: "listening", detail: "stdio" });
     return;
   }
-
-  const app = express();
-  app.use(express.json({ limit: "1mb" }));
-
-  const transport = new StreamableHTTPServerTransport({
-    sessionIdGenerator: () => randomUUID()
-  });
-
-  await server.connect(transport);
-
-  app.all("/mcp", (req, res) => {
-    void transport.handleRequest(req, res, req.body);
-  });
-
-  const httpServer = app.listen(config.port, config.host, () => {
-    log({ event: "listening", detail: `http://${config.host}:${String(config.port)}/mcp` });
-  });
-
-  process.on("SIGINT", () => {
-    log({ event: "shutdown" });
-    void transport.close();
-    httpServer.close(() => {
-      process.exit(0);
-    });
-  });
+  await bootHttp(ctx);
 }

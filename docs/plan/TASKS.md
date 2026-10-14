@@ -11,11 +11,11 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 |---|---|---|---|
 | WS0 Foundation | 7 | 7 | 17 |
 | WS1 Task initiation + Bedrock | 6 | 5 | 17.5 |
-| WS2 Protocol + web client | 6 | 0 | 20 |
+| WS2 Protocol + web client | 6 | 5 | 20 |
 | WS3 Remaining tools | 10 | 0 | 20 |
 | WS4 Quality | 6 | 0 | 11.5 |
 | WS5 Freeze + submission | 10 | 0 | 21 |
-| **Total** | **45** | **12** | **107** |
+| **Total** | **45** | **17** | **107** |
 | of which P0 only | | | 95 (incl. 3 h already done) |
 
 > Capacity and cut order: [PLAN.md](PLAN.md) §4.
@@ -47,12 +47,12 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 
 | ID | Task | Pri | Reqs | Deps | Est | Status | Done when |
 |---|---|---|---|---|---|---|---|
-| T-020 | `server/sessions.ts` + `boot.ts` rework: per-session transport, Origin allow-list, loopback bind, static files, `/healthz`, graceful shutdown, 64 KB body | P0 | §10, NF7 | T-003 | 4 | todo | TC-041..045 |
-| T-021 | Protocol test: initialize -> initialized -> tools/list -> tools/call over real HTTP; reconnect and 404 re-init | P0 | §12 | T-013, T-020 | 2.5 | todo | TC-040 green in CI |
-| T-022 | `web/public/mcp-client.js` (JSON + SSE parsing, session/protocol headers, trace events) | P0 | §10 | T-020 | 3 | todo | TC-046 (client vs server); works in Chrome |
-| T-023 | `web/public/router.js` grammar + Node unit tests | P0 | ADR-007 | T-013 | 3 | todo | TC-090..093 |
-| T-024 | Web UI: `index.html`, `app.js`, `styles.css`, speech in/out, hero line, focus clock, tool-call drawer with source chip, a11y | P0 | §3, DESIGN | T-022, T-023 | 6 | todo | manual checklist in TEST-PLAN §6; Lighthouse a11y >= 95 |
-| T-025 | Dockerfile/compose/CI adaptation (Node 22+, `data/` volume, env passthrough; CI runs lint, typecheck, test, protocol test in mock mode) | P0 | NF5 | T-020 | 1.5 | todo | `docker compose up` serves UI; CI green on PR |
+| T-020 | `server/sessions.ts` + `boot.ts` rework: per-session transport, Origin allow-list, loopback bind, static files, `/healthz`, graceful shutdown, 64 KB body | P0 | §10, NF7 | T-003 | 4 | done | TC-041..045 |
+| T-021 | Protocol test: initialize -> initialized -> tools/list -> tools/call over real HTTP; reconnect and 404 re-init | P0 | §12 | T-013, T-020 | 2.5 | done | TC-040 green in CI |
+| T-022 | `web/public/mcp-client.js` (JSON + SSE parsing, session/protocol headers, trace events) | P0 | §10 | T-020 | 3 | done | TC-046 (client vs server); works in Chrome |
+| T-023 | `web/public/router.js` grammar + Node unit tests | P0 | ADR-007 | T-013 | 3 | done | TC-090..093 |
+| T-024 | Web UI: `index.html`, `app.js`, `styles.css`, speech in/out, hero line, focus clock, tool-call drawer with source chip, a11y | P0 | §3, DESIGN | T-022, T-023 | 6 | doing | manual checklist in TEST-PLAN §6; Lighthouse a11y >= 95 |
+| T-025 | Dockerfile/compose/CI adaptation (Node 22+, `data/` volume, env passthrough; CI runs lint, typecheck, test, protocol test in mock mode) | P0 | NF5 | T-020 | 1.5 | done | `docker compose up` serves UI; CI green on PR |
 
 ## WS3 Remaining tools (parallel with WS2)
 
@@ -100,3 +100,4 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 | Change |
 |---|
 | Initial breakdown from PRD v1 |
+| T-024 `doing`: built and verified in headless Chrome (typed flow, 320 px, Lighthouse accessibility 100). Still open: the device rows of TEST-PLAN §6 (mic and speech on Chrome desktop and Android, Safari/Firefox typed fallback, screen reader, dark mode and reduced motion by eye) |

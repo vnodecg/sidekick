@@ -1,46 +1,33 @@
-# Build stage for dependencies
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Build stage for TypeScript compilation
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
-# Production stage
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 
-# Set production environment
 ENV NODE_ENV=production
 ENV STARTER_TRANSPORT=http
 ENV PORT=3000
 ENV SIDEKICK_HOST=0.0.0.0
+ENV SIDEKICK_DB_PATH=/data/sidekick.db
 
-# Copy built files and production dependencies
-COPY --from=build /app/build ./build
-COPY --from=build /app/package*.json ./
-COPY --from=build /app/mcp.json ./
-COPY --from=build /app/.vscode/mcp.json ./.vscode/
-
-# Install only production dependencies
+COPY package*.json ./
 RUN npm ci --omit=dev
+COPY --from=build /app/build ./build
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-USER nodejs
-
-# Expose the HTTP port
+RUN mkdir /data && chown node:node /data
+USER node
+VOLUME /data
 EXPOSE 3000
 
-# Health check for container monitoring
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/mcp', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})" || exit 1
+  CMD node -e "fetch('http://127.0.0.1:3000/healthz').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
 
-# Start the server
-CMD ["node", "build/index.js"]
+CMD ["node", "--disable-warning=ExperimentalWarning", "build/index.js"]

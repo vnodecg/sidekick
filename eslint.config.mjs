@@ -253,6 +253,21 @@ export default tseslint.config(
     }
   },
   {
+    // Browser code: plain ES modules with no type information and no Node globals
+    files: ['src/web/public/**/*.js'],
+    extends: [tseslint.configs.disableTypeChecked],
+    languageOptions: {
+      globals: Object.fromEntries(
+        ['window', 'document', 'location', 'navigator', 'performance', 'speechSynthesis', 'SpeechSynthesisUtterance', 'URLSearchParams', 'EventTarget', 'CustomEvent', 'TextDecoder', 'setTimeout', 'clearTimeout', 'setInterval', 'fetch', 'globalThis'].map((name) => [name, 'readonly'])
+      ),
+    },
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/naming-convention': 'off',
+      'import/no-default-export': 'off',
+    }
+  },
+  {
     // Ignore build output and common directories
     ignores: ['build/**', 'dist/**', 'node_modules/**', 'coverage/**', 'docs/**', 'eslint.config.mjs', 'drizzle.config.ts', 'dev.js', '_templates/**', 'tests/helpers/*.mjs'],
   }

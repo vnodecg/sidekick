@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 23.x
+          node-version: 22.x
           cache: 'npm'
           
       - name: Install dependencies
@@ -43,24 +43,28 @@ jobs:
           test -f build/index.js
 
   test:
-    name: Run Tests
+    name: Tests (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
-    
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22.x, 24.x]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 23.x
+          node-version: ${{ matrix.node }}
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Build project
         run: npm run build
-        
-      - name: Run tests
+
+      - name: Run tests (mock AI, includes the HTTP protocol test)
         run: npm test

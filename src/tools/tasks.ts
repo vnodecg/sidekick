@@ -13,12 +13,15 @@ const MAX_TASK_CHARS = 500;
 const NOTHING_WAITING = "Nothing is waiting right now. Want to start something?";
 const NEXT_STEP = "Next tiny step: {step}.";
 
+const TASK_OPEN = { taskOpen: true } as const;
+const TASK_CLOSED = { taskOpen: false } as const;
+
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false } as const;
 
 function nextStep(ctx: AppContext): CallToolResult {
   const step = currentStepTitle(ctx.db, resolveUserId());
-  if (step === undefined) return ctx.speak({ template: NOTHING_WAITING });
-  return ctx.speak({ template: NEXT_STEP, echo: { step } });
+  if (step === undefined) return ctx.speak({ template: NOTHING_WAITING, meta: TASK_CLOSED });
+  return ctx.speak({ template: NEXT_STEP, echo: { step }, meta: TASK_OPEN });
 }
 
 function registerBreakDown(server: McpServer, ctx: AppContext): void {
@@ -38,7 +41,7 @@ function registerBreakDown(server: McpServer, ctx: AppContext): void {
       return ctx.speak({
         template: "Okay. First tiny step: {step}.",
         echo: { step: steps[0] },
-        meta: { taskId, source, latencyMs, stepCount: steps.length },
+        meta: { taskId, source, latencyMs, stepCount: steps.length, ...TASK_OPEN },
       });
     },
   );
@@ -66,9 +69,11 @@ function registerCompleteStep(server: McpServer, ctx: AppContext): void {
     },
     () => {
       const done = completeStep(ctx.db, resolveUserId(), ctx.clock.now());
-      if (done.kind === "none") return ctx.speak({ template: NOTHING_WAITING });
-      if (done.kind === "next") return ctx.speak({ template: `Nice. ${NEXT_STEP}`, echo: { step: done.step } });
-      return ctx.speak({ template: "Nice. That was the last step, so the whole thing is done." });
+      if (done.kind === "none") return ctx.speak({ template: NOTHING_WAITING, meta: TASK_CLOSED });
+      if (done.kind === "next") {
+        return ctx.speak({ template: `Nice. ${NEXT_STEP}`, echo: { step: done.step }, meta: TASK_OPEN });
+      }
+      return ctx.speak({ template: "Nice. That was the last step, so the whole thing is done.", meta: TASK_CLOSED });
     },
   );
 }

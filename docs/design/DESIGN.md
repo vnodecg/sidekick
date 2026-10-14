@@ -44,6 +44,7 @@ Stateless utterances, stateful server. The user never needs to say a tool name, 
 - Speech output: `speechSynthesis`, rate 0.95, one utterance per reply, cancelled when a new one starts. Mute toggle.
 - Speech input: `SpeechRecognition` (Chrome/Edge). Push-to-talk (tap to start, auto-stop on silence). If unsupported: typed input is shown automatically with a one-line note.
 - Never read `_meta`, source badges or trace.
+- The page ships no inline script or style and no remote assets, so the server's `default-src 'self'` CSP holds.
 
 ## 3. Web client UI
 

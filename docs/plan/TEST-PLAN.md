@@ -132,7 +132,7 @@ Target (not a gate): `core/` and `ai/` >= 90% lines, `tools/` >= 80%. Tracked wi
 
 - [ ] Chrome desktop and Android: mic permission, speak, reply spoken, mute works
 - [ ] Safari/Firefox: typed fallback is shown automatically
-- [ ] 320 px wide: no horizontal scroll; touch targets >= 44 px
+- [x] 320 px wide: no horizontal scroll; touch targets >= 44 px
 - [ ] Keyboard only: tab order, `/`, Enter, Space
 - [ ] Screen reader announces replies (VoiceOver or NVDA)
 - [ ] `prefers-reduced-motion` and dark mode

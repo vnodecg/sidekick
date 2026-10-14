@@ -8,6 +8,7 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 - **Inputs:** zod schemas, everything optional unless stated. Missing required input yields one short question as the reply (not an error).
 - **Descriptions** are written for an LLM router: plain words, start with *"Use when the user says ..."*. Text below is the literal description to ship.
 - **Annotations:** `readOnlyHint` true for reads; `destructiveHint` true only for `delete_my_data`; `idempotentHint` where noted.
+- **`taskOpen`:** `break_down_task`, `next_step` and `complete_step` include `_meta.taskOpen` (boolean, whether an active task remains) for the web router. Never spoken.
 - **Free-text inputs** (`task`, `thought`, `note`, `label`, `text`, `name`, `idea`) go through `safety.screen()` first and are capped at 280 chars (task 500).
 - **Active task** = the open parent task with the latest `updated_at`. Defined once in `repos/tasks.ts`.
 - **Time phrases** come from `timewords.ts`: under 1 min "less than a minute", then "N minutes", then "about N hours" (up to 47), then "about N days".
