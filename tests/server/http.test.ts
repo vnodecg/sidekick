@@ -192,3 +192,40 @@ describe("healthz and static files", () => {
     assert.match(String(replyText(reply)), /^Okay\. First tiny step: /);
   });
 });
+
+describe("bearer token (TC-049)", () => {
+  const TOKEN = "s3cret-token";
+  const bearer = (value: string): Record<string, string> => ({ Authorization: value });
+
+  it("serves /mcp without a token when none is configured", async () => {
+    const { baseUrl } = await start();
+    assert.strictEqual((await rpc(baseUrl, INITIALIZE)).status, 200);
+  });
+
+  it("answers 401 with a challenge when the token is missing or wrong", async () => {
+    const { baseUrl } = await start({ env: { SIDEKICK_AUTH_TOKEN: TOKEN } });
+    for (const headers of [{}, bearer("Bearer nope"), bearer(TOKEN), bearer("Bearer s3cret-token-and-more"), bearer("Basic abc")]) {
+      const reply = await rpc(baseUrl, INITIALIZE, { headers });
+      assert.strictEqual(reply.status, 401, JSON.stringify(headers));
+      assert.strictEqual(reply.headers.get("www-authenticate"), "Bearer");
+    }
+    assert.strictEqual((await fetch(`${baseUrl}/mcp`, { method: "GET" })).status, 401);
+    assert.strictEqual((await fetch(`${baseUrl}/mcp`, { method: "DELETE" })).status, 401);
+  });
+
+  it("accepts the right token for a whole session", async () => {
+    const { baseUrl } = await start({ env: { SIDEKICK_AUTH_TOKEN: TOKEN } });
+    const headers = bearer(`Bearer ${TOKEN}`);
+    const sessionId = await openSession(baseUrl, headers);
+    const reply = await rpc(baseUrl, { jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "next_step", arguments: {} } }, { sessionId, headers });
+    assert.strictEqual(reply.status, 200);
+  });
+
+  it("lets the CORS preflight and the static page through without a token", async () => {
+    const { baseUrl } = await start({ env: { SIDEKICK_AUTH_TOKEN: TOKEN } });
+    const preflight = await fetch(`${baseUrl}/mcp`, { method: "OPTIONS", headers: { Origin: "http://localhost:3000" } });
+    assert.strictEqual(preflight.status, 204);
+    assert.strictEqual((await fetch(`${baseUrl}/healthz`)).status, 200);
+    assert.strictEqual((await fetch(`${baseUrl}/`)).status, 200);
+  });
+});

@@ -61,3 +61,12 @@ export function startOfLocalDay(epochSeconds: number, timeZone: string): number 
   const firstGuess = midnightAsUtc - utcOffsetSeconds(midnightAsUtc, timeZone);
   return midnightAsUtc - utcOffsetSeconds(firstGuess, timeZone);
 }
+
+export function localTime(epochSeconds: number, timeZone: string): string {
+  const { hour, minute } = localParts(epochSeconds, timeZone);
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+export function localMoment(epochSeconds: number, timeZone: string): { today: string; time: string } {
+  return { today: localDate(epochSeconds, timeZone), time: localTime(epochSeconds, timeZone) };
+}

@@ -8,6 +8,7 @@ import type { NodeSQLiteDatabase } from "drizzle-orm/node-sqlite";
 
 export type Db = NodeSQLiteDatabase & { $client: DatabaseSync };
 export type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
+export type Reader = Db | Tx;
 
 const IN_MEMORY = ":memory:";
 const MIGRATIONS_FOLDER = fileURLToPath(new URL("./migrations", import.meta.url));

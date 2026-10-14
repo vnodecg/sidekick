@@ -71,7 +71,7 @@ SIDEKICK_MOCK_AI=1 npm start
 ```bash
 export AWS_REGION=us-east-1                      # a region where you have model access
 export SIDEKICK_BEDROCK_MODEL_ID=<model-or-inference-profile-id>
-npm start                                        # uses the default AWS credential chain
+npm start                                        # needs AWS_BEARER_TOKEN_BEDROCK in the environment
 ```
 
 Open the "Tool calls" drawer in the page to see the real `initialize`, `tools/list` and `tools/call` traffic and a `source` chip (`bedrock`, `fallback`, `mock`).
@@ -94,7 +94,8 @@ docker compose up --build   # data persists in ./data
 | `SIDEKICK_BEDROCK_MODEL_ID` | none | model or inference profile id |
 | `SIDEKICK_AI_TIMEOUT_MS` / `SIDEKICK_AI_BUDGET_MS` | `2500` / `4500` | per-attempt and total AI time |
 | `SIDEKICK_ALLOWED_ORIGINS` | localhost | allowed browser origins |
-| `SIDEKICK_AUTH_TOKEN` | unset | optional bearer token |
+| `SIDEKICK_AUTH_TOKEN` | unset | bearer token for `/mcp`; required when `SIDEKICK_HOST` is not loopback |
+| `SIDEKICK_ALLOW_OPEN_BIND` | unset | `1` skips that requirement (used by `docker-compose.yml`, which only publishes on 127.0.0.1) |
 
 Full list: [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) §6.
 

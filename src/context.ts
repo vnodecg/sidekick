@@ -16,6 +16,7 @@ export type AppContext = {
   db: Db;
   speak: Speak;
   ai: AiClient;
+  random: () => number;
 };
 
 function createAiClient(config: Config): AiClient {
@@ -39,5 +40,6 @@ export function createContext(config: Config, clock: Clock, log: Log): AppContex
     db: openDb(config.dbPath),
     speak: createSpeak({ strict: config.strictReplies, log }),
     ai: createAiClient(config),
+    random: Math.random,
   };
 }

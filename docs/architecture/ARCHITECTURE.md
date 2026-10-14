@@ -147,15 +147,16 @@ The user never hears a stack trace, a status code, or the word "error".
 | `SIDEKICK_AI_TIMEOUT_MS` | `2500` | per-attempt timeout |
 | `SIDEKICK_AI_BUDGET_MS` | `4500` | total budget incl. retry |
 | `SIDEKICK_ALLOWED_ORIGINS` | same-origin + localhost | Origin allow-list |
-| `SIDEKICK_AUTH_TOKEN` | unset | optional bearer token (P1) |
+| `SIDEKICK_AUTH_TOKEN` | unset | bearer token for `/mcp`; required when `SIDEKICK_HOST` is not loopback (HTTP transport) |
+| `SIDEKICK_ALLOW_OPEN_BIND` | unset | `1` = allow a non-loopback host without a token. Set only by `docker-compose.yml`, whose port mapping is loopback-only |
 | `CORS_ORIGIN` | removed | replaced by allow-list |
 
-AWS credentials use the SDK default chain; Sidekick never reads or logs them.
+Bedrock authenticates with a Bedrock API key in `AWS_BEARER_TOKEN_BEDROCK`, which the AWS SDK reads itself; Sidekick never reads or logs it.
 
 ## 7. Deployment
 
 - **Judge/dev path:** `npm ci && npm start` (build then HTTP on 127.0.0.1:3000). Web client at `/`, MCP at `/mcp`.
-- **Docker:** `docker compose up` serves the UI in mock mode on `127.0.0.1:3000` with the database in the `sidekick-data` volume (`/data`). `docker compose --profile bedrock up sidekick-bedrock` passes `AWS_REGION`, `SIDEKICK_BEDROCK_MODEL_ID` and the AWS credential variables through from the host. Image: Node 22 alpine, runs as `node`, health check on `/healthz`.
+- **Docker:** `docker compose up` serves the UI in mock mode on `127.0.0.1:3000` with the database in the `sidekick-data` volume (`/data`). `docker compose --profile bedrock up sidekick-bedrock` passes `AWS_REGION`, `SIDEKICK_BEDROCK_MODEL_ID` and `AWS_BEARER_TOKEN_BEDROCK` through from the host. Image: Node 22 alpine, runs as `node`, health check on `/healthz`.
 - **Not Lambda** (PRD risk R2): ephemeral storage. Documented in README.
 - **Exposing to a remote assistant:** put behind a tunnel or reverse proxy, set `SIDEKICK_AUTH_TOKEN` and `SIDEKICK_ALLOWED_ORIGINS`. Not required for the demo.
 

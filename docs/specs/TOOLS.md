@@ -69,7 +69,7 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 - **Description:** "Use when the user wants a heads-up before switching to something else, like leaving the house or a meeting."
 - **Input:** `minutes: int 5–180` (required), `label?`.
 - **Behaviour:** pure function, no storage. Returns the plan as one spoken sentence: heads-up points at half, 10, 5 and 2 minutes (those that fit in `minutes`). Result `_meta.schedule = [{atMinutes}]` so an assistant or the web client can schedule reminders (ADR-011).
-- **Reply:** `"Okay. I'll count down to {label or 'the switch'} in {minutes} minutes: heads-up at {points}, and wrap up at 2."` (<= 3 sentences, numbers as words not needed).
+- **Reply:** `"Okay. I'll count down to {label or 'the switch'} in {minutes} minutes: heads-up at {points} minutes left, and wrap up at 2."` (<= 3 sentences). Heads-up points are half the time plus 10 and 5, keeping only those strictly inside `minutes` and above 2; with none, the colon clause is dropped. `_meta.schedule[].atMinutes` is minutes *remaining* when the reminder should be spoken, ending with 2. Missing `minutes` asks "How many minutes until the switch?".
 
 ## 3. Memory
 
@@ -82,7 +82,7 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 ### `sort_dump` · F7 · P0
 - **Description:** "Use only when the user asks to hear their saved thoughts or brain dump."
 - **Behaviour:** latest five un-archived items, newest first. Spoken as one sentence, items joined by commas, and "and N more" when there are more (a count of saved items is allowed; it is not a count of misses). Empty: "Nothing saved yet."
-- **Reply:** `"You saved: {a}, {b}, {c}. Want me to read more?"` Echo rules: [SAFETY-COPY.md](SAFETY-COPY.md) §3.
+- **Reply:** `"You saved: {a}, {b} and {c}."`, or `"{a}, {b}, {c}, {d}, {e} and 4 more"` when there are more than are spoken. No follow-up question: nothing could answer it, since there is no paging tool. Items are cut at 60 chars and the list stops early once about 30 words are spoken (the rest join the count). Read-only; nothing is archived. Echo rules: [SAFETY-COPY.md](SAFETY-COPY.md) §3.
 
 ### `park_my_place` · F8 · P0
 - **Description:** "Use when the user is about to be interrupted or switch away and wants to remember where they were."
@@ -99,18 +99,19 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 ### `pick_for_me` · F9 · P0
 - **Description:** "Use when the user can't decide and wants Sidekick to choose for them."
 - **Input:** `options?: string[]` (2–10).
-- **Behaviour:** with options: uniform random pick (injectable RNG); no options: delegates to the `what_now` selection. Always exactly one result stated confidently, no hedging, no reasons list.
-- **Reply:** `"Go with {option}."` / `"Do this: {suggestion}."`
+- **Behaviour:** with options: uniform random pick (`ctx.random`, injectable); no options: delegates to the `what_now` selection. Always exactly one result stated confidently, no hedging, no reasons list.
+- **Reply:** `"Go with {option}."`, or without options the `what_now` sentence itself (no extra "Do this:" wrapper).
+- **Annotations:** not read-only, because the no-options path can advance the break-idea rotation.
 
 ### `match_energy` · F9 · P0
 - **Description:** "Use when the user says how much energy they have, like low, medium or high, and wants one thing to do."
 - **Input:** `energy: "low"|"medium"|"high"` (required; also accept "tired"/"wired" synonyms in router, not server).
-- **Mapping:** low -> a quick dopamine/rest idea, or a step already marked tiny (first step of active task); medium -> next step; high -> next step of the active task and, if none, "pick something that's been waiting" (suggest `break_down_task`). One suggestion.
+- **Mapping:** low -> a rest idea from `dopamine`; medium -> next step of the active task, else the `what_now` suggestion; high -> next step of the active task, else "pick something that's been waiting and tell me what it is" (nudges `break_down_task`). One suggestion. Not read-only (advances the break-idea rotation).
 - **Reply:** `"With low energy, try this: {x}."`
 
 ### `what_now` · F9 · P0
 - **Description:** "Use when the user asks what they should do right now, or doesn't know what to do."
-- **Order (first hit wins):** 1) running focus session -> "Keep going, you're {elapsed} into {label}." 2) due routine (see F12) -> "It's time for {routine}." 3) next open step -> "Next tiny step: {step}." 4) a short break from `dopamine`. Exactly one sentence of suggestion.
+- **Order (first hit wins):** 1) running focus session -> "Keep going, you're {elapsed} into {label}." (unlabelled: "Keep going, you're {elapsed} in.") 2) due routine (see F12) -> "It's time for {routine}." 3) next open step -> "Next tiny step: {step}." 4) a short break from `dopamine` -> "Take a short break: {idea}." Exactly one sentence of suggestion. The ranking lives once in `core/suggest.ts`; step 4 advances the break rotation, so the tool is not read-only.
 - **Tests:** TC-030 (all four branches, plus ordering conflicts).
 
 ### `log_win` · F10 · P0
@@ -121,16 +122,18 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 ### `my_wins` · F10 · P0
 - **Description:** "Use when the user asks what they've done, wants to hear their wins, or feels like they did nothing."
 - **Behaviour:** wins from the user's local "today" (`SIDEKICK_TZ`); if none today, last 24h; if none, last 7 days; if none ever: "Nothing logged yet, but we can start with one tiny thing." Reply names up to three newest items and, if more, "and {n} more". Counts of wins only, never of what wasn't done.
-- **Reply:** `"Today you: {a}, {b} and {c}, and 4 more."`
+- **Reply:** `"Today you: {a}, {b} and {c}."` or `"Today you: {a}, {b}, {c} and 4 more."`; the lead is "In the last day you" or "This past week you" for the wider windows.
 
 ## 5. Dopamine, routines, reset
 
 ### `dopamine_menu` · F11 · P1
 - **Description:** "Use when the user needs a quick, enjoyable break or a little boost."
+- **Annotations:** not read-only (seeds and stamps the rotation). The stamp is pushed past the newest existing one, because seconds-resolution ties would otherwise repeat the same idea.
 - **Reply:** one idea from `dopamine`, LRU rotated: `"Try this for five minutes: {idea}."` Seeds defaults on first use (DATA-MODEL §4).
 
 ### `add_dopamine_idea` · F11 · P1
-- **Input:** `idea` (required, <= 60 chars). **Reply:** `"Added to your break ideas."`
+- **Description:** "Use when the user wants to add their own idea to their list of quick breaks."
+- **Input:** `idea` (required, <= 60 chars; adding seeds the defaults first so they are not lost). **Reply:** `"Added to your break ideas."`
 
 ### `add_routine` · F12 · P1
 - **Description:** "Use when the user wants a daily reminder anchor, like taking out the bins or stretching."
@@ -141,7 +144,8 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 - **Due rule:** active routine with no `time_of_day`, or `now_local >= time_of_day`, and `last_done_on != today`. Returns one: `"It's time for {name}."` None: "Nothing is waiting right now." Wording never says overdue/late/missed.
 
 ### `routine_done` · F12 · P1
-- **Input:** `name?` (fuzzy match, case-insensitive; default = the one `routine_check` would return). Sets `last_done_on = today`, inserts win `kind=routine`. **Reply:** `"Done. {name} is checked off for today."`
+- **Description:** "Use when the user says they finished a daily routine."
+- **Input:** `name?` (fuzzy match, case-insensitive; default = the one `routine_check` would return). Sets `last_done_on = today`, inserts win `kind=routine`. **Reply:** `"Done. {name} is checked off for today."` Nothing due and no name: "Nothing is waiting right now."; unknown name: "I don't have a routine called that." (no write). Fuzzy match: exact name first, then either string containing the other.
 
 ### `gentle_reset` · F13 · P1
 - **Description:** "Use when the user says they had a bad day, wants a fresh start, or feels behind."
@@ -157,6 +161,8 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 - **Tests:** TC-050..052.
 
 ## 7. Tool inventory
+
+`Status: all 24 tools implemented.` Source modules: `tools/time.ts`, `memory.ts`, `wins.ts`, `decisions.ts`, `dopamine.ts`, `routines.ts`, `reset.ts`, `data.ts` (plus `tasks.ts` for §1).
 
 | # | Tool | Writes | Reads | AI |
 |---|---|---|---|---|

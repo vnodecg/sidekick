@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import express from "express";
 import { z } from "zod";
 import { sendRpcError } from "./sessions.js";
@@ -11,6 +12,7 @@ const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
 const NO_CONTENT = 204;
 const CALM_FAULT = "Sorry, I couldn't do that just now. Try me again in a moment.";
 
+const UNAUTHORIZED = { status: 401, code: -32600, message: "Missing or invalid bearer token." };
 const FORBIDDEN_ORIGIN = { status: 403, code: -32600, message: "Origin not allowed." };
 const NOT_JSON = { status: 415, code: -32600, message: "Content-Type must be application/json." };
 const TOO_LARGE = { status: 413, code: -32600, message: "Request body too large." };
@@ -81,6 +83,29 @@ function originGuard(allowedOrigins: Array<string>): RequestHandler {
   };
 }
 
+function tokenMatches(header: string | undefined, token: string): boolean {
+  const scheme = /^Bearer /i;
+  if (header === undefined || !scheme.test(header)) return false;
+  const presented = Buffer.from(header.replace(scheme, ""));
+  const expected = Buffer.from(token);
+  return presented.length === expected.length && timingSafeEqual(presented, expected);
+}
+
+/*
+ * Guards /mcp only. The static UI and /healthz stay open: they carry no data,
+ * and a browser page cannot attach a header to its own navigation.
+ */
+function bearerGuard(token: string | undefined): RequestHandler {
+  return (req, res, next) => {
+    if (token === undefined || tokenMatches(req.headers.authorization, token)) {
+      next();
+      return;
+    }
+    res.setHeader("WWW-Authenticate", "Bearer");
+    sendRpcError(res, UNAUTHORIZED);
+  };
+}
+
 const securityHeaders: RequestHandler = (_req, res, next) => {
   res.setHeader("Content-Security-Policy", CSP);
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -127,7 +152,7 @@ function mcpHandler(ctx: AppContext, sessions: Sessions): (req: Request, res: ex
 }
 
 export function createHttpApp({ ctx, sessions, staticDir }: HttpOptions): Express {
-  const { version, mockAi, allowedOrigins } = ctx.config;
+  const { version, mockAi, allowedOrigins, authToken } = ctx.config;
   const app = express();
   app.disable("x-powered-by");
   app.use(securityHeaders, originGuard(allowedOrigins));
@@ -137,6 +162,7 @@ export function createHttpApp({ ctx, sessions, staticDir }: HttpOptions): Expres
   });
 
   const handle = mcpHandler(ctx, sessions);
+  app.use("/mcp", bearerGuard(authToken));
   app.post("/mcp", requireJson, express.json({ limit: BODY_LIMIT }), handle);
   app.get("/mcp", handle);
   app.delete("/mcp", handle);

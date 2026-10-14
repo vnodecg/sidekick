@@ -35,7 +35,7 @@ Server advertises only `tools`. Resources and prompts capabilities are not regis
 | Bind | `127.0.0.1` by default (`SIDEKICK_HOST`) |
 | Origin | If `Origin` is present it must be a loopback host (`localhost`, `127.0.0.1`, `[::1]`, any port, http or https) or listed in `SIDEKICK_ALLOWED_ORIGINS` (compared by normalised origin, so a trailing slash is fine, unparsable entries are ignored); else `403`. `Origin: null` and non-http schemes are rejected. "Same-origin" is deliberately not trusted: under DNS rebinding the attacker's `Origin` and `Host` agree. Requests with no `Origin` (non-browser clients) pass. Prevents drive-by calls to `delete_my_data`. |
 | CORS | Allowed origins are echoed with `Vary: Origin`; never `*`, never credentials. `OPTIONS` preflight answers `204`; exposes `Mcp-Session-Id`. |
-| Auth | Optional `Authorization: Bearer $SIDEKICK_AUTH_TOKEN` (P1); required when `SIDEKICK_HOST` is not loopback |
+| Auth | Optional `Authorization: Bearer $SIDEKICK_AUTH_TOKEN` on every `/mcp` request (constant-time compare; `401` with `WWW-Authenticate: Bearer` otherwise). The CORS preflight, `/healthz` and the static UI are exempt, so the bundled web client is for loopback use; a token-protected deployment is for assistants and other API clients. With the HTTP transport, config fails fast when `SIDEKICK_HOST` is not loopback and no token is set, unless `SIDEKICK_ALLOW_OPEN_BIND=1` (set by `docker-compose.yml`, which publishes the port on 127.0.0.1 only) |
 | Body | JSON only, 64 KB limit |
 | Rate | none in v1 (single user); noted in RAID |
 | Logging | [SAFETY-COPY.md](SAFETY-COPY.md) §8 |

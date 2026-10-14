@@ -12,10 +12,10 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 | WS0 Foundation | 7 | 7 | 17 |
 | WS1 Task initiation + Bedrock | 6 | 5 | 17.5 |
 | WS2 Protocol + web client | 6 | 5 | 20 |
-| WS3 Remaining tools | 10 | 0 | 20 |
+| WS3 Remaining tools | 10 | 10 | 20 |
 | WS4 Quality | 6 | 0 | 11.5 |
 | WS5 Freeze + submission | 10 | 0 | 21 |
-| **Total** | **45** | **17** | **107** |
+| **Total** | **45** | **27** | **107** |
 | of which P0 only | | | 95 (incl. 3 h already done) |
 
 > Capacity and cut order: [PLAN.md](PLAN.md) §4.
@@ -58,16 +58,16 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 
 | ID | Task | Pri | Reqs | Deps | Est | Status | Done when |
 |---|---|---|---|---|---|---|---|
-| T-030 | `repos/focus.ts` + `tools/time.ts`: `start_focus`, `time_check`, `end_focus` | P0 | F5 | T-004, T-005, T-006, T-003 | 2.5 | todo | TC-020..024 |
-| T-031 | `repos/dump.ts`, `repos/parked.ts` + `tools/memory.ts`: `brain_dump`, `sort_dump`, `park_my_place`, `where_was_i` | P0 | F7, F8 | T-004, T-005, T-006 | 3 | todo | TC-025..029 |
-| T-032 | `repos/wins.ts` + `tools/wins.ts`: `log_win`, `my_wins` | P0 | F10 | T-004, T-005, T-006 | 1.5 | todo | TC-031, TC-032 |
-| T-033 | `repos/dopamine.ts` (seed, LRU) + `tools/decisions.ts`: `pick_for_me`, `match_energy`, `what_now` | P0 | F9 | T-013, T-030, T-032 | 3 | todo | TC-030 (4 branches + ordering), TC-033, TC-034 |
-| T-034 | `repos/userData.ts` + `tools/data.ts`: `delete_my_data` with confirm | P0 | F14, NF9 | T-004 and all repos | 1.5 | todo | TC-050..052 |
-| T-040 | `tools/dopamine.ts`: `dopamine_menu`, `add_dopamine_idea` | P1 | F11 | T-033 | 1.5 | todo | TC-035 |
-| T-041 | `repos/routines.ts` + `tools/routines.ts`: `add_routine`, `routine_check`, `routine_done`; hook into `what_now` | P1 | F12 | T-033 | 3 | todo | TC-036..039, TC-063 |
-| T-042 | `gentle_reset` | P1 | F13 | T-013, T-030 | 1.5 | todo | TC-047 |
-| T-043 | `transition_warning` (pure) | P1 | F6 | T-006 | 1.5 | todo | TC-048 |
-| T-044 | Optional bearer-token auth and non-loopback guard | P1 | NF10 | T-020 | 1 | todo | TC-049 |
+| T-030 | `repos/focus.ts` + `tools/time.ts`: `start_focus`, `time_check`, `end_focus` | P0 | F5 | T-004, T-005, T-006, T-003 | 2.5 | done | TC-020..024 |
+| T-031 | `repos/dump.ts`, `repos/parked.ts` + `tools/memory.ts`: `brain_dump`, `sort_dump`, `park_my_place`, `where_was_i` | P0 | F7, F8 | T-004, T-005, T-006 | 3 | done | TC-025..029 |
+| T-032 | `repos/wins.ts` + `tools/wins.ts`: `log_win`, `my_wins` | P0 | F10 | T-004, T-005, T-006 | 1.5 | done | TC-031, TC-032 |
+| T-033 | `repos/dopamine.ts` (seed, LRU) + `tools/decisions.ts`: `pick_for_me`, `match_energy`, `what_now` | P0 | F9 | T-013, T-030, T-032 | 3 | done | TC-030 (4 branches + ordering), TC-033, TC-034 |
+| T-034 | `repos/userData.ts` + `tools/data.ts`: `delete_my_data` with confirm | P0 | F14, NF9 | T-004 and all repos | 1.5 | done | TC-050..052 |
+| T-040 | `tools/dopamine.ts`: `dopamine_menu`, `add_dopamine_idea` | P1 | F11 | T-033 | 1.5 | done | TC-035 |
+| T-041 | `repos/routines.ts` + `tools/routines.ts`: `add_routine`, `routine_check`, `routine_done`; hook into `what_now` | P1 | F12 | T-033 | 3 | done | TC-036..039, TC-063 |
+| T-042 | `gentle_reset` | P1 | F13 | T-013, T-030 | 1.5 | done | TC-047 |
+| T-043 | `transition_warning` (pure) | P1 | F6 | T-006 | 1.5 | done | TC-048 |
+| T-044 | Optional bearer-token auth and non-loopback guard | P1 | NF10 | T-020 | 1 | done | TC-049 |
 
 ## WS4 Quality
 
@@ -101,3 +101,4 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 |---|
 | Initial breakdown from PRD v1 |
 | T-024 `doing`: built and verified in headless Chrome (typed flow, 320 px, Lighthouse accessibility 100). Still open: the device rows of TEST-PLAN §6 (mic and speech on Chrome desktop and Android, Safari/Firefox typed fallback, screen reader, dark mode and reduced motion by eye) |
+| WS3 `done` (T-030..T-034, T-040..T-044): all 24 tools shipped. `what_now` ranking lives in `core/suggest.ts` and is shared with `pick_for_me`. Decisions recorded in TOOLS.md §1–§6: `sort_dump` asks no follow-up question; the no-options `pick_for_me` returns the `what_now` sentence; tools that advance the break-idea rotation are not marked read-only. T-044 adds `SIDEKICK_ALLOW_OPEN_BIND` so Docker (container binds 0.0.0.0, host port is loopback-only) still starts without a token |

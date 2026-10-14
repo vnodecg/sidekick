@@ -53,4 +53,13 @@ describe("loadConfig", () => {
     assert.throws(() => loadConfig({ ...MOCK, SIDEKICK_TZ: "Mars/Olympus" }), /SIDEKICK_TZ.*IANA/);
     assert.throws(() => loadConfig({ ...MOCK, SIDEKICK_MOCK_AI: "yes" }), /SIDEKICK_MOCK_AI/);
   });
+
+  it("requires a token when the HTTP host is not loopback unless explicitly opened (NF10)", () => {
+    const http = { ...MOCK, STARTER_TRANSPORT: "http" };
+    assert.throws(() => loadConfig({ ...http, SIDEKICK_HOST: "0.0.0.0" }), /SIDEKICK_AUTH_TOKEN: required when SIDEKICK_HOST is not loopback/);
+    assert.strictEqual(loadConfig({ ...http, SIDEKICK_HOST: "0.0.0.0", SIDEKICK_AUTH_TOKEN: "t" }).authToken, "t");
+    assert.strictEqual(loadConfig({ ...http, SIDEKICK_HOST: "0.0.0.0", SIDEKICK_ALLOW_OPEN_BIND: "1" }).host, "0.0.0.0");
+    for (const host of ["127.0.0.1", "localhost", "::1"]) assert.strictEqual(loadConfig({ ...http, SIDEKICK_HOST: host }).host, host);
+    assert.strictEqual(loadConfig({ ...MOCK, SIDEKICK_HOST: "0.0.0.0" }).host, "0.0.0.0");
+  });
 });

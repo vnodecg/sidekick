@@ -3,7 +3,7 @@ import { insertWin } from "./wins.js";
 import { tx } from "../db/connection.js";
 import { tasks } from "../db/schema.js";
 import type { Steps } from "../ai/types.js";
-import type { Db, Tx } from "../db/connection.js";
+import type { Db, Reader, Tx } from "../db/connection.js";
 
 type TaskRow = typeof tasks.$inferSelect;
 type TaskSource = NonNullable<TaskRow["source"]>;
@@ -20,8 +20,6 @@ export type StepCompletion =
   | { kind: "none" }
   | { kind: "next"; step: string }
   | { kind: "finished" };
-
-type Reader = Db | Tx;
 
 export function createTask(db: Db, task: NewTask): number {
   return tx(db, (t) => {
@@ -83,4 +81,11 @@ export function completeStep(db: Db, userId: string, now: number): StepCompletio
     insertWin(t, { userId, kind: "task", text: parent.title, refId: parent.id, createdAt: now });
     return { kind: "finished" };
   });
+}
+
+export function archiveOpenTasks(db: Reader, userId: string, now: number): void {
+  db.update(tasks)
+    .set({ status: "archived", updatedAt: now })
+    .where(and(eq(tasks.userId, userId), eq(tasks.status, "open")))
+    .run();
 }

@@ -113,7 +113,7 @@ export async function openSession(baseUrl: string, headers: Record<string, strin
   const init = await rpc(baseUrl, INITIALIZE, { headers });
   const sessionId = init.headers.get("mcp-session-id");
   if (init.status !== 200 || sessionId === null) throw new Error(`initialize failed with ${String(init.status)}`);
-  const ack = await rpc(baseUrl, { jsonrpc: "2.0", method: "notifications/initialized" }, { sessionId });
+  const ack = await rpc(baseUrl, { jsonrpc: "2.0", method: "notifications/initialized" }, { sessionId, headers });
   if (ack.status !== 202) throw new Error(`initialized notification answered ${String(ack.status)}`);
   return sessionId;
 }

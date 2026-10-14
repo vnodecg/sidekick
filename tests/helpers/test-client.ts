@@ -58,7 +58,7 @@ export class TestClient {
       command: "node",
       args: [serverPath],
       stderr: this.config.stderr ?? "ignore",
-      env: { ...getDefaultEnvironment(), SIDEKICK_MOCK_AI: "1", SIDEKICK_DB_PATH: ":memory:", NODE_ENV: "test", ...this.config.env },
+      env: { ...getDefaultEnvironment(), STARTER_TRANSPORT: "stdio", SIDEKICK_MOCK_AI: "1", SIDEKICK_DB_PATH: ":memory:", NODE_ENV: "test", ...this.config.env },
     });
 
     await this.client.connect(this.transport);

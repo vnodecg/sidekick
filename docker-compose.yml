@@ -13,6 +13,8 @@ services:
       SIDEKICK_MOCK_AI: "1"
       SIDEKICK_TZ: ${SIDEKICK_TZ:-UTC}
       SIDEKICK_ALLOWED_ORIGINS: ${SIDEKICK_ALLOWED_ORIGINS:-}
+      SIDEKICK_AUTH_TOKEN:
+      SIDEKICK_ALLOW_OPEN_BIND: "1"
 
   sidekick-bedrock:
     <<: *sidekick
@@ -20,11 +22,11 @@ services:
     environment:
       SIDEKICK_TZ: ${SIDEKICK_TZ:-UTC}
       SIDEKICK_ALLOWED_ORIGINS: ${SIDEKICK_ALLOWED_ORIGINS:-}
+      SIDEKICK_AUTH_TOKEN:
+      SIDEKICK_ALLOW_OPEN_BIND: "1"
       AWS_REGION:
       SIDEKICK_BEDROCK_MODEL_ID:
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      AWS_SESSION_TOKEN:
+      AWS_BEARER_TOKEN_BEDROCK:
 
 volumes:
   sidekick-data:

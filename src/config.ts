@@ -7,6 +7,8 @@ const DEFAULT_AI_BUDGET_MS = 4500;
 
 const systemTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
+
 const isTimeZone = (value: string): boolean => {
   try {
     new Intl.DateTimeFormat("en-US", { timeZone: value });
@@ -34,8 +36,17 @@ const envSchema = z
     SIDEKICK_AI_BUDGET_MS: positiveInt(DEFAULT_AI_BUDGET_MS),
     SIDEKICK_ALLOWED_ORIGINS: z.string().default(""),
     SIDEKICK_AUTH_TOKEN: z.string().min(1).optional(),
+    SIDEKICK_ALLOW_OPEN_BIND: z.enum(["1"]).optional(),
   })
   .superRefine((env, ctx) => {
+    const exposed = env.STARTER_TRANSPORT === "http" && !LOOPBACK_HOSTS.has(env.SIDEKICK_HOST);
+    if (exposed && env.SIDEKICK_AUTH_TOKEN === undefined && env.SIDEKICK_ALLOW_OPEN_BIND === undefined) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["SIDEKICK_AUTH_TOKEN"],
+        message: "required when SIDEKICK_HOST is not loopback (or set SIDEKICK_ALLOW_OPEN_BIND=1 behind a loopback-only port mapping)",
+      });
+    }
     if (env.SIDEKICK_MOCK_AI !== undefined) return;
     for (const key of ["AWS_REGION", "SIDEKICK_BEDROCK_MODEL_ID"] as const) {
       if (env[key] === undefined) {

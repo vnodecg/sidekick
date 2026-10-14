@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { breakDown } from "../ai/breakdown.js";
+import { READ_ONLY } from "../core/annotations.js";
 import { crisisReply, screen } from "../core/safety.js";
 import { UNBLOCKERS } from "../core/unblockers.js";
 import { resolveUserId } from "../core/user.js";
@@ -15,8 +16,6 @@ const NEXT_STEP = "Next tiny step: {step}.";
 
 const TASK_OPEN = { taskOpen: true } as const;
 const TASK_CLOSED = { taskOpen: false } as const;
-
-const READ_ONLY = { readOnlyHint: true, destructiveHint: false } as const;
 
 function nextStep(ctx: AppContext): CallToolResult {
   const step = currentStepTitle(ctx.db, resolveUserId());
