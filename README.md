@@ -10,7 +10,7 @@ Built for the Amazon Developer Hackathon: Alexa+ track and AWS Builder mini chal
 
 ## Status
 
-**Planning complete, implementation starting (2026-10-13).** The code in `src/` is still the MCP TypeScript starter; the commands under *Quick start* describe the target and become real as tasks land. Track progress in [docs/plan/TASKS.md](docs/plan/TASKS.md).
+**Planning complete, implementation starting (2026-10-13).** The starter demo modules have been removed; the commands under *Quick start* describe the target and become real as tasks land. Track progress in [docs/plan/TASKS.md](docs/plan/TASKS.md).
 
 ## What it does
 

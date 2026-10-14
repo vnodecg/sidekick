@@ -1,7 +1,7 @@
 {
-  "name": "mcp-typescript-starter",
+  "name": "sidekick",
   "version": "1.0.0",
-  "description": "A minimalistic MCP server demonstrating tools, resources, and prompts",
+  "description": "Voice-first ADHD assistant: a self-hosted MCP server",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -25,9 +25,8 @@
   },
   "keywords": [
     "mcp",
-    "hello-world",
-    "example",
-    "tutorial"
+    "adhd",
+    "voice"
   ],
   "author": "",
   "license": "MIT",
@@ -57,7 +56,7 @@
     "typescript-eslint": "^8.46.2"
   },
   "bin": {
-    "mcp-hello-world": "./build/index.js"
+    "sidekick": "./build/index.js"
   },
   "files": [
     "build"

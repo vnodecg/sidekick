@@ -14,9 +14,6 @@
  * 
  * List tools:
  * {"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}
- * 
- * Call echo tool:
- * {"jsonrpc":"2.0","method":"tools/call","params":{"name":"echo","arguments":{"text":"Hello World"}},"id":3}
  */
 
 import { spawn } from 'child_process';
@@ -87,8 +84,6 @@ console.log(`${DIM}1. Initialize connection:${RESET}`);
 console.log('   {"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"1.0.0","capabilities":{},"clientInfo":{"name":"dev-client","version":"1.0.0"}},"id":1}\n');
 console.log(`${DIM}2. List available tools:${RESET}`);
 console.log('   {"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}\n');
-console.log(`${DIM}3. Call echo tool:${RESET}`);
-console.log('   {"jsonrpc":"2.0","method":"tools/call","params":{"name":"echo","arguments":{"text":"Hello World"}},"id":3}\n');
 console.log(`${DIM}Type 'exit' or press Ctrl+C to quit${RESET}\n`);
 
 rl.prompt();

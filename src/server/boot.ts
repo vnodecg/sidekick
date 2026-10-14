@@ -17,14 +17,8 @@ export async function boot(
 ): Promise<void> {
   const transportMode = mode ?? (process.env.STARTER_TRANSPORT as TransportMode | undefined) ?? "stdio";
   const server = new McpServer({
-    name: "mcp-server-starter",
+    name: "sidekick",
     version: "1.0.0",
-    capabilities: {
-      tools: {},
-      resources: {},
-      prompts: {},
-      completions: {},
-    },
   });
 
   await autoRegisterModules(server);
@@ -32,7 +26,7 @@ export async function boot(
   if (transportMode === "stdio") {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error("MCP Server Starter running on stdio");
+    console.error("Sidekick running on stdio");
     return;
   }
 
@@ -63,7 +57,7 @@ export async function boot(
 
   const port = Number(process.env.PORT ?? 3000);
   const httpServer = app.listen(port, () => {
-    console.log(`MCP Server Starter (HTTP) listening on http://localhost:${String(port)}/mcp`);
+    console.log(`Sidekick (HTTP) listening on http://localhost:${String(port)}/mcp`);
     console.log(`SSE endpoint: GET http://localhost:${String(port)}/mcp`);
     console.log(`JSON-RPC endpoint: POST http://localhost:${String(port)}/mcp`);
     console.log(`CORS origin: ${corsOrigin}`);

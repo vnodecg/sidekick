@@ -1,6 +1,6 @@
 {
   "servers": {
-    "mcp-server-starter-stdio": {
+    "sidekick-stdio": {
       "type": "stdio",
       "command": "node",
       "args": ["./build/index.js"],
@@ -8,7 +8,7 @@
         "STARTER_TRANSPORT": "stdio"
       }
     },
-    "mcp-server-starter-http": {
+    "sidekick-http": {
       "type": "http",
       "url": "http://localhost:3000/mcp",
       "headers": {

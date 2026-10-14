@@ -237,13 +237,13 @@ export default tseslint.config(
   },
   {
     // Allow default exports for registerable modules
-    files: ['src/tools/*.ts', 'src/resources/*.ts', 'src/prompts/*.ts', 'examples/*.ts'],
+    files: ['src/tools/*.ts', 'src/resources/*.ts', 'src/prompts/*.ts'],
     rules: {
       'import/no-default-export': 'off',
     }
   },
   {
     // Ignore build output and common directories
-    ignores: ['build/**', 'dist/**', 'node_modules/**', 'coverage/**', 'docs/**', 'examples/**', 'eslint.config.mjs', 'dev.js', '_templates/**'],
+    ignores: ['build/**', 'dist/**', 'node_modules/**', 'coverage/**', 'docs/**', 'eslint.config.mjs', 'dev.js', '_templates/**'],
   }
 );
