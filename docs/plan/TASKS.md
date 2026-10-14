@@ -10,12 +10,12 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 | Workstream | Tasks | Done | Est h |
 |---|---|---|---|
 | WS0 Foundation | 7 | 7 | 17 |
-| WS1 Task initiation + Bedrock | 6 | 0 | 17.5 |
+| WS1 Task initiation + Bedrock | 6 | 5 | 17.5 |
 | WS2 Protocol + web client | 6 | 0 | 20 |
 | WS3 Remaining tools | 10 | 0 | 20 |
 | WS4 Quality | 6 | 0 | 11.5 |
 | WS5 Freeze + submission | 10 | 0 | 21 |
-| **Total** | **45** | **7** | **107** |
+| **Total** | **45** | **12** | **107** |
 | of which P0 only | | | 95 (incl. 3 h already done) |
 
 > Capacity and cut order: [PLAN.md](PLAN.md) §4.
@@ -36,12 +36,12 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 
 | ID | Task | Pri | Reqs | Deps | Est | Status | Done when |
 |---|---|---|---|---|---|---|---|
-| T-010 | `ai/prompt.ts`, `validate.ts`, `fallback.ts`, `mock.ts`, `types.ts` | P0 | F1, §8 | T-006 | 3 | todo | validation table fully unit-tested (TC-006, TC-007) |
-| T-011 | `ai/bedrock.ts` Converse adapter (forced tool, abort timeout, no SDK retries); choose model; **measure latency** over >= 20 calls | P0 | F1, NF1, NF8 | T-002, T-010, AWS access (Q1) | 4 | todo | real call works; p50/p95 recorded in `docs/plan/LATENCY.md`; Q1 closed |
-| T-012 | `ai/breakdown.ts` orchestration (budget, retry once, fallback) + `repos/aiCalls.ts` | P0 | F1, §8 | T-004, T-010 | 3 | todo | TC-001..005, TC-008 |
-| T-013 | `repos/tasks.ts` and tools `break_down_task`, `next_step`, `complete_step` (module `tools/tasks.ts`) | P0 | F1, F2, F3, AC3 | T-003, T-006, T-012 | 4 | todo | TC-001, TC-010..014, TC-070 |
-| T-014 | Failure-path tests via fake `AiClient` (timeout, malformed, too many, banned, injection) | P0 | §12 | T-012 | 2 | todo | TC-002..009 green |
-| T-015 | `im_stuck` with curated pool | P1 | F4 | T-013 | 1.5 | todo | TC-015 |
+| T-010 | `ai/prompt.ts`, `validate.ts`, `fallback.ts`, `mock.ts`, `types.ts` | P0 | F1, §8 | T-006 | 3 | done | validation table fully unit-tested (TC-006, TC-007) |
+| T-011 | `ai/bedrock.ts` Converse adapter (forced tool, abort timeout, no SDK retries); choose model; **measure latency** over >= 20 calls | P0 | F1, NF1, NF8 | T-002, T-010, AWS access (Q1) | 4 | blocked | real call works; p50/p95 recorded in `docs/plan/LATENCY.md`; Q1 closed |
+| T-012 | `ai/breakdown.ts` orchestration (budget, retry once, fallback) + `repos/aiCalls.ts` | P0 | F1, §8 | T-004, T-010 | 3 | done | TC-001..005, TC-008 |
+| T-013 | `repos/tasks.ts` and tools `break_down_task`, `next_step`, `complete_step` (module `tools/tasks.ts`) | P0 | F1, F2, F3, AC3 | T-003, T-006, T-012 | 4 | done | TC-001, TC-010..014, TC-070 |
+| T-014 | Failure-path tests via fake `AiClient` (timeout, malformed, too many, banned, injection) | P0 | §12 | T-012 | 2 | done | TC-002..009 green |
+| T-015 | `im_stuck` with curated pool | P1 | F4 | T-013 | 1.5 | done | TC-015 |
 
 ## WS2 Protocol + web client
 

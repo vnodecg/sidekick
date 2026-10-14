@@ -11,7 +11,7 @@ task text
        deadline = now + SIDEKICK_AI_BUDGET_MS
        for attempt in 1..2:
          if remaining < MIN_ATTEMPT_MS (1000) and attempt == 2: break
-         raw = client.breakDown(task, signal: min(TIMEOUT, remaining))   # never throws past here
+         raw = client.breakDown(task, signal: min(TIMEOUT, remaining))   # thrown errors are caught and classified (errors.ts)
          res = validate(raw)
          log ai_calls(model, attempt, success, errClass, latencyMs)
          if res.ok: return {steps, source: client.kind}
@@ -47,7 +47,7 @@ task text
 
 ## 3. Prompt
 
-System (stored in `prompt.ts`, versioned by `PROMPT_VERSION`):
+System (stored in `prompt.ts`):
 
 ```
 You help people with ADHD start tasks. Break the task in <task> into tiny steps.

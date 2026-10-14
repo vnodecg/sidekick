@@ -9,11 +9,11 @@ const SERVER = fileURLToPath(new URL("../../build/index.js", import.meta.url));
 const PACKAGE = fileURLToPath(new URL("../../package.json", import.meta.url));
 
 describe("server boot (built)", () => {
-  it("serves an empty tool list when no module registers tools", async () => {
+  it("lists the task tools", async () => {
     const client = await createTestClient();
     try {
       const { tools } = await client.listTools();
-      assert.deepStrictEqual(tools, []);
+      assert.deepStrictEqual(tools.map((tool) => tool.name).sort(), ["break_down_task", "complete_step", "im_stuck", "next_step"]);
     } finally {
       await client.teardown();
     }

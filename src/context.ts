@@ -1,5 +1,8 @@
+import { createBedrockClient } from "./ai/bedrock.js";
+import { createMockClient } from "./ai/mock.js";
 import { createSpeak } from "./core/reply.js";
 import { openDb } from "./db/connection.js";
+import type { AiClient } from "./ai/types.js";
 import type { Config } from "./config.js";
 import type { Clock } from "./core/clock.js";
 import type { Log } from "./core/log.js";
@@ -12,7 +15,16 @@ export type AppContext = {
   log: Log;
   db: Db;
   speak: Speak;
+  ai: AiClient;
 };
+
+function createAiClient(config: Config): AiClient {
+  if (config.mockAi) return createMockClient();
+  if (config.awsRegion === undefined || config.bedrockModelId === undefined) {
+    throw new Error("AWS_REGION and SIDEKICK_BEDROCK_MODEL_ID are required unless SIDEKICK_MOCK_AI=1");
+  }
+  return createBedrockClient({ region: config.awsRegion, modelId: config.bedrockModelId });
+}
 
 /*
  * The single place dependencies are constructed. Everything else receives an
@@ -26,5 +38,6 @@ export function createContext(config: Config, clock: Clock, log: Log): AppContex
     log,
     db: openDb(config.dbPath),
     speak: createSpeak({ strict: config.strictReplies, log }),
+    ai: createAiClient(config),
   };
 }
