@@ -109,14 +109,13 @@ sequenceDiagram
 
 ### 4.2 Reply pipeline (enforces AC1 and AC2 for all tools)
 
-Every handler returns `speak(parts)` from `core/reply.ts`. `speak` sanitises echoed user text, asserts at most 3 sentences, plain text, and no banned words in template text. A violation throws in tests and CI, and degrades to a safe generic sentence in production. No tool builds its own `content` array. Details: [SAFETY-COPY.md](../specs/SAFETY-COPY.md).
+Every handler returns `speak(parts)` from `core/reply.ts`; no tool builds its own `content` array. Rules and enforcement: [SAFETY-COPY.md](../specs/SAFETY-COPY.md) §1–§4.
 
 ### 4.3 Failure handling
 
 | Failure | Behaviour |
 |---|---|
-| Bedrock timeout / throttle / auth / network | retry once if budget remains, else fallback template; reply is normal, `_meta.source = "fallback"` |
-| Model output malformed / wrong count / banned word | same as above |
+| Bedrock timeout / throttle / auth / network, or invalid model output | retry and fallback per [AI-BEDROCK.md](../specs/AI-BEDROCK.md) §1, §4, §5; reply is normal, `_meta.source = "fallback"` |
 | SQLite error | tool returns `isError: true` with a calm fixed sentence; error class logged, no content |
 | Unknown/invalid tool input | zod error mapped to one-question reply ("What task should I break down?") |
 | Crisis phrase in input | care reply, nothing stored, not an error |
@@ -162,6 +161,6 @@ AWS credentials use the SDK default chain; Sidekick never reads or logs them.
 | Starter behaviour (`src/server/boot.ts`) | Problem | Fix |
 |---|---|---|
 | One `StreamableHTTPServerTransport` shared by every client | A second `initialize` is rejected; reconnecting after page reload fails | Per-session transport + server map (ADR-004) |
-| `CORS_ORIGIN` defaults to `*` with `credentials: true` | Any web page can drive a local server with delete tool | Origin allow-list; bind 127.0.0.1 |
+| `CORS_ORIGIN` defaults to `*` with `credentials: true` | Any web page can drive a local server with delete tool | See [PROTOCOL.md](../specs/PROTOCOL.md) §3 |
 | Server name/version are placeholders | Shows up in `initialize` result | Set to `sidekick` / package version |
 | Logs with `console.log` | Easy to leak content | `core/log.ts` |

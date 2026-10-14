@@ -18,7 +18,7 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 | **Total** | **45** | **1** | **107** |
 | of which P0 only | | | 95 (incl. 3 h already done) |
 
-> Capacity warning: ~92 remaining P0 hours over 9 working days (Oct 14–22) is about 10 h/day for one person. Plan assumes **two people** (Q5) or cutting P1 and bonus to zero and accepting thin polish. See [PLAN.md](PLAN.md) §4.
+> Capacity and cut order: [PLAN.md](PLAN.md) §4.
 
 ## WS0 Foundation (Oct 13–14)
 

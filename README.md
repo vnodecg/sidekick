@@ -122,7 +122,7 @@ npm run inspect      # MCP Inspector (stdio)
 npm run inspect:http # MCP Inspector against http://localhost:3000/mcp
 ```
 
-Tools are auto-loaded from `src/tools/`; see [CLAUDE.md](CLAUDE.md) for the module pattern. The original starter README is kept at [docs/archive-starter-README.md](docs/archive-starter-README.md).
+Tools are auto-loaded from `src/tools/`; see [CLAUDE.md](CLAUDE.md) for the module pattern.
 
 ## Documentation
 

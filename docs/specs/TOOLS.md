@@ -81,7 +81,7 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 ### `sort_dump` · F7 · P0
 - **Description:** "Use only when the user asks to hear their saved thoughts or brain dump."
 - **Behaviour:** latest five un-archived items, newest first. Spoken as one sentence, items joined by commas, and "and N more" when there are more (a count of saved items is allowed; it is not a count of misses). Empty: "Nothing saved yet."
-- **Reply:** `"You saved: {a}, {b}, {c}. Want me to read more?"` Echoed items truncated to 60 chars each.
+- **Reply:** `"You saved: {a}, {b}, {c}. Want me to read more?"` Echo rules: [SAFETY-COPY.md](SAFETY-COPY.md) §3.
 
 ### `park_my_place` · F8 · P0
 - **Description:** "Use when the user is about to be interrupted or switch away and wants to remember where they were."
@@ -133,7 +133,7 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 
 ### `add_routine` · F12 · P1
 - **Description:** "Use when the user wants a daily reminder anchor, like taking out the bins or stretching."
-- **Input:** `name` (required), `time_of_day?: "HH:MM"` local. **Reply:** `"Okay, {name} is on your daily list."` The tool only stores and repeats the user's own words. Medication-like names are accepted but no dosing or advice is ever generated (safety note, TC-063).
+- **Input:** `name` (required), `time_of_day?: "HH:MM"` local. **Reply:** `"Okay, {name} is on your daily list."` Medication-like names: see [SAFETY-COPY.md](SAFETY-COPY.md) §7.
 
 ### `routine_check` · F12 · P1
 - **Description:** "Use when the user asks which daily routines are coming up or what's due."
@@ -157,42 +157,33 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 
 ## 7. Tool inventory
 
-| # | Tool | F | Pri | Writes | Reads | AI |
-|---|---|---|---|---|---|---|
-| 1 | break_down_task | F1 | P0 | tasks, ai_calls | | yes |
-| 2 | next_step | F2 | P0 | | tasks | |
-| 3 | complete_step | F2,F3 | P0 | tasks, wins | tasks | |
-| 4 | im_stuck | F4 | P1 | | tasks | |
-| 5 | start_focus | F5 | P0 | focus | tasks, focus | |
-| 6 | time_check | F5 | P0 | | focus | |
-| 7 | end_focus | F5 | P0 | focus, wins | focus | |
-| 8 | transition_warning | F6 | P1 | | | |
-| 9 | brain_dump | F7 | P0 | dump | | |
-| 10 | sort_dump | F7 | P0 | | dump | |
-| 11 | park_my_place | F8 | P0 | parked | tasks | |
-| 12 | where_was_i | F8 | P0 | | parked, tasks | |
-| 13 | pick_for_me | F9 | P0 | | (what_now) | |
-| 14 | match_energy | F9 | P0 | | tasks, dopamine | |
-| 15 | what_now | F9 | P0 | | focus, routines, tasks, dopamine | |
-| 16 | log_win | F10 | P0 | wins | | |
-| 17 | my_wins | F10 | P0 | | wins | |
-| 18 | dopamine_menu | F11 | P1 | dopamine (seed) | dopamine | |
-| 19 | add_dopamine_idea | F11 | P1 | dopamine | | |
-| 20 | add_routine | F12 | P1 | routines | | |
-| 21 | routine_check | F12 | P1 | | routines | |
-| 22 | routine_done | F12 | P1 | routines, wins | routines | |
-| 23 | gentle_reset | F13 | P1 | tasks, focus, parked | | |
-| 24 | delete_my_data | F14 | P0 | all | | |
+| # | Tool | Writes | Reads | AI |
+|---|---|---|---|---|
+| 1 | break_down_task | tasks, ai_calls | | yes |
+| 2 | next_step | | tasks | |
+| 3 | complete_step | tasks, wins | tasks | |
+| 4 | im_stuck | | tasks | |
+| 5 | start_focus | focus | tasks, focus | |
+| 6 | time_check | | focus | |
+| 7 | end_focus | focus, wins | focus | |
+| 8 | transition_warning | | | |
+| 9 | brain_dump | dump | | |
+| 10 | sort_dump | | dump | |
+| 11 | park_my_place | parked | tasks | |
+| 12 | where_was_i | | parked, tasks | |
+| 13 | pick_for_me | | (what_now) | |
+| 14 | match_energy | | tasks, dopamine | |
+| 15 | what_now | | focus, routines, tasks, dopamine | |
+| 16 | log_win | wins | | |
+| 17 | my_wins | | wins | |
+| 18 | dopamine_menu | dopamine (seed) | dopamine | |
+| 19 | add_dopamine_idea | dopamine | | |
+| 20 | add_routine | routines | | |
+| 21 | routine_check | | routines | |
+| 22 | routine_done | routines, wins | routines | |
+| 23 | gentle_reset | tasks, focus, parked | | |
+| 24 | delete_my_data | all | | |
 
-P0 count: 16 tools. P1 count: 8.
+## 8. PRD gaps resolved here
 
-## 8. PRD gaps resolved here (confirm in RAID)
-
-| Gap in PRD | Resolution | Ref |
-|---|---|---|
-| `sort_dump` returns up to 5 items but AC1 forbids lists | Spoken as one comma-joined sentence | A3 |
-| `delete_my_data` is destructive, "asks at most one question" | Confirm flag, one question | A2 / ADR-012 |
-| What "due routine" means | `time_of_day` reached and not done today | A4 |
-| `im_stuck` / `match_energy` without AI | Curated pools (ADR-010) | ADR-010 |
-| "Staged warnings" vs no push channel | Pull-based, plan in `_meta.schedule` | ADR-011 |
-| Multiple open tasks | Latest-updated is active; none auto-closed | A5 |
+Resolutions are specified in the tool sections above and tracked as assumptions A2–A5 in [RAID.md](../plan/RAID.md) and ADR-010, ADR-011, ADR-012.

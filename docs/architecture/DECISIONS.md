@@ -18,8 +18,8 @@ Format: context, decision, consequences. Status: `accepted`, `proposed` (needs c
 **Consequences.** API is marked experimental; pin Node major in CI. Warning is suppressed in logs with `--disable-warning=ExperimentalWarning` in the start script.
 
 ## ADR-004: Stateful sessions, one transport + server per session · accepted
-**Context.** Starter shares one transport for all clients, which breaks reconnects.
-**Decision.** Map `mcp-session-id` -> `{transport, server}`. `initialize` without a session creates one; others look up or return 400/404 per spec; `DELETE` closes. Idle sessions expire after 30 min. All sessions share one DB handle.
+**Context.** See [ARCHITECTURE.md](ARCHITECTURE.md) §8.
+**Decision.** One transport and server per session, keyed by `mcp-session-id`; lifecycle in [PROTOCOL.md](../specs/PROTOCOL.md) §4. All sessions share one DB handle.
 **Alternative rejected:** stateless per-request servers. Simpler, but hides `initialize` from the demo and gives up GET/SSE.
 **Consequences.** ~80 lines in `server/sessions.ts`. Covered by protocol tests TC-040..045.
 
@@ -29,12 +29,12 @@ Format: context, decision, consequences. Status: `accepted`, `proposed` (needs c
 
 ## ADR-006: Plain-JS web client with a hand-written MCP client · accepted
 **Context.** PRD requires "a real MCP client" in a web page. Bundling the SDK client for the browser adds a build step.
-**Decision.** ~150 lines of ES-module JS speaking JSON-RPC over `fetch`, handling `application/json` and `text/event-stream` responses, `Mcp-Session-Id`, and `MCP-Protocol-Version` headers. No bundler, served as static files by Express.
+**Decision.** A hand-written ES-module client (~150 lines) over `fetch`, no bundler, served as static files by Express. Contract: [PROTOCOL.md](../specs/PROTOCOL.md) §2, §6.
 **Consequences.** We own protocol correctness in the browser; the protocol test (TC-040) runs the same wire sequence from Node.
 
 ## ADR-007: Rule-based intent router in the web client · proposed (A1)
 **Context.** The PRD never says what maps "I can't start" to a tool. Alexa+ would use its own LLM. Our web page has none, and PRD says Bedrock is only for `break_down_task`.
-**Decision.** Deterministic phrase grammar in `router.js` (about 25 patterns, plus "anything else with 4+ words while no task is open = break_down_task"). The tool-call panel shows exactly what was called. Bonus demo: Claude Desktop / MCP Inspector against `/mcp` proves tool descriptions work for an LLM router.
+**Decision.** Deterministic phrase grammar in `router.js` (table: [PROTOCOL.md](../specs/PROTOCOL.md) §6). The tool-call panel shows exactly what was called. Bonus demo: Claude Desktop / MCP Inspector against `/mcp` proves tool descriptions work for an LLM router.
 **Consequences.** Router quality bounds the web demo, not the server. Needs confirmation because it affects the "Bedrock only once" claim.
 
 ## ADR-008: One reply choke point (`speak`) · accepted
@@ -42,7 +42,7 @@ Format: context, decision, consequences. Status: `accepted`, `proposed` (needs c
 **Consequences.** Compliance is a property of one function plus one property-style test over every tool, rather than 24 hand checks.
 
 ## ADR-009: Domain modules register multiple tools · accepted
-**Decision.** 8 auto-loaded modules (`tasks`, `time`, `memory`, `decisions`, `wins`, `dopamine`, `routines`, `data`) each register several tools. Hygen generators are not used for these.
+**Decision.** Auto-loaded domain modules (list: [ARCHITECTURE.md](ARCHITECTURE.md) §3) each register several tools. Hygen generators are not used for these.
 **Consequences.** T-003 confirms the loader/`RegisterableModule.name` tolerate this; otherwise register via an explicit index.
 
 ## ADR-010: Deterministic everything except `break_down_task` · accepted

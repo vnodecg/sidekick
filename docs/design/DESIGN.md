@@ -35,7 +35,7 @@ Stateless utterances, stateful server. The user never needs to say a tool name, 
 | "Fresh start." | gentle_reset | "Fresh start. Nothing is held against you. Want to pick one tiny thing?" |
 
 ### 2.3 Empty and error states (all spoken, all calm)
-- No data: "Nothing saved yet." / "Nothing is waiting right now."
+- No data: each tool's empty reply is defined in [TOOLS.md](../specs/TOOLS.md).
 - Server fault: "Sorry, I couldn't do that just now. Try me again in a moment." (no codes)
 - Unrecognised intent in the web client: routes to `what_now`, never "I didn't understand".
 - Slow reply (> 2 s): UI shows a soft pulse, no spinner text, no "loading".
@@ -90,7 +90,7 @@ Stateless utterances, stateful server. The user never needs to say a tool name, 
 
 ## 4. Persona and tone
 
-Name: Sidekick. Warm, brief, never gushing. Does not claim feelings, does not give medical or emotional advice, does not moralise. Tool descriptions (read by other assistants) mirror this: plain, "Use when the user says ...".
+Name: Sidekick. Warm, brief, never gushing. Does not claim feelings, does not give medical or emotional advice, does not moralise. Tool descriptions (read by other assistants) follow the rules in [TOOLS.md](../specs/TOOLS.md) §0.
 
 ## 5. Copy inventory
 
@@ -98,5 +98,4 @@ All spoken strings are constants in each tool module and listed in [TOOLS.md](..
 
 ## 6. Demo and README design
 
-- README top: one-line pitch, a 20-second GIF of the hero flow, `npm ci && npm start`, link to docs.
-- Demo video (< 3 min, plan in [SUBMISSION.md](../plan/SUBMISSION.md)): voice only on screen, drawer open once to show the Bedrock call and the `initialize -> tools/list -> tools/call` trace.
+README content is task T-070 in [TASKS.md](../plan/TASKS.md); the demo video plan is [SUBMISSION.md](../plan/SUBMISSION.md) §3.

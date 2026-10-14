@@ -36,7 +36,7 @@ Server advertises only `tools`. Resources and prompts capabilities are not regis
 | Auth | Optional `Authorization: Bearer $SIDEKICK_AUTH_TOKEN` (P1); required when `SIDEKICK_HOST` is not loopback |
 | Body | JSON only, 64 KB limit (starter 1 MB reduced) |
 | Rate | none in v1 (single user); noted in RAID |
-| Logging | method, tool name, status, ms. Never bodies |
+| Logging | [SAFETY-COPY.md](SAFETY-COPY.md) §8 |
 
 ## 4. Session lifecycle
 
@@ -96,5 +96,4 @@ The router never calls an LLM. A debug toggle shows "matched pattern X" next to 
 ## 7. Compatibility with other MCP clients
 
 - Must work with MCP Inspector (`npm run inspect:http`) and one general assistant (bonus, T-091) with no special-casing.
-- Tool names are snake_case, <= 24 chars; descriptions are plain words starting with "Use when".
-- No tool requires structured input a voice assistant can't supply; every parameter except `task`, `thought`, `note`, `text`, `name`, `energy`, `idea`, `minutes` (transition_warning) is optional.
+- Tool naming, descriptions and input rules: [TOOLS.md](TOOLS.md) §0 and the per-tool sections.

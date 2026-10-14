@@ -119,7 +119,7 @@ CREATE TABLE ai_calls (
   model       TEXT    NOT NULL,          -- configured id, or 'mock' / 'fallback'
   attempt     INTEGER NOT NULL,
   success     INTEGER NOT NULL CHECK (success IN (0,1)),
-  error_class TEXT,                      -- timeout|throttled|auth|network|malformed|count|empty|too_long|banned|dupe|markup|other
+  error_class TEXT,                      -- values: AI-BEDROCK §4
   latency_ms  INTEGER NOT NULL,
   created_at  INTEGER NOT NULL
 );
@@ -143,7 +143,7 @@ PRD delta: `ai_calls` is new (PRD §9). Added beyond PRD column lists: `archived
 | recentDump | sort_dump | `WHERE user_id=? AND archived_at IS NULL ORDER BY created_at DESC LIMIT 6` (6th row tells "and more") |
 | lastParked | where_was_i | `WHERE user_id=? ORDER BY created_at DESC LIMIT 1` |
 | winsSince | my_wins | `WHERE user_id=? AND created_at >= ? ORDER BY created_at DESC` |
-| dueRoutine | routine_check, what_now | filter in JS using local time: active, `last_done_on IS NOT today`, `time_of_day` null or reached; order by `time_of_day` |
+| dueRoutine | routine_check, what_now | filter in JS in local time; rule: TOOLS §5 `routine_check`; order by `time_of_day` |
 | nextBreak | dopamine_menu | `ORDER BY last_used_at IS NOT NULL, last_used_at LIMIT 1` then stamp |
 | deleteAll (tx) | delete_my_data | `DELETE FROM <t> WHERE user_id=?` for all 8 tables, child rows first |
 
@@ -151,11 +151,9 @@ PRD delta: `ai_calls` is new (PRD §9). Added beyond PRD column lists: `archived
 
 | Topic | Decision |
 |---|---|
-| Steps live in `tasks` | Per PRD "step points to parent" via `parent_id`. |
 | Task lifecycle | `open -> done`, or `open -> archived` (gentle_reset). Nothing is "overdue"; there is no due date. |
 | `source` on parent | Lets the UI/demo show whether steps came from Bedrock; never spoken. |
 | Wins never deleted | Except by `delete_my_data`. `gentle_reset` keeps them. |
 | Retention | None in v1. A single user's volume is tiny. |
 | Backup | Copy the file while server is stopped or use `VACUUM INTO`. Documented in README. |
-| Size/time | Epoch seconds avoid DST bugs; local-day logic uses `Intl.DateTimeFormat` with `SIDEKICK_TZ`. |
 | Multi-user later | Add `users` table and FK; today `user_id` is just a partition key. No cross-user query exists to refactor. |

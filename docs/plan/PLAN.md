@@ -52,16 +52,13 @@ Parallel track that unblocks the demo's "real Bedrock" claim: `T-010 -> T-011 (n
 - Trunk-based on `main` with short-lived branches; CI required (lint, typecheck, test, protocol test in mock mode).
 - Mock AI is the default in CI and local dev; real Bedrock only in T-011, T-053 (real mode run), the demo and `npm run test:bedrock` (opt-in, skipped without env).
 - Cost guard: no Bedrock call inside the default test suite; track spend in RAID after T-011.
-- Every behaviour change updates the owning spec in the same PR (docs are code here).
 - Weekly cadence is replaced by a **daily 10-min sync** and an EOD update to TASKS.md + RAID.md.
 
 ## 7. Release and submission mechanics
 
-1. Freeze (Oct 20): tag, copy `docs/plan/SUBMISSION.md` checklist into a GitHub issue.
-2. Clean-clone rehearsal on a second machine (Linux + macOS or Docker) with `npm ci && npm start` in mock mode and Bedrock mode.
-3. Make repo public (or share with reviewers on Oct 22, as invitations expire in 7 days) after verifying the rules page names (T-076).
-4. Submit Oct 22; keep Oct 23 for fixes only.
-5. Judging period Nov 9–20: keep `main` stable; no breaking pushes; README states the exact commit judged.
+1. Freeze (Oct 20): tag, copy the [SUBMISSION.md](SUBMISSION.md) checklist into a GitHub issue.
+2. Repo visibility, submission and pre-submit checks: [SUBMISSION.md](SUBMISSION.md) §1, §5.
+3. Judging period Nov 9–20: keep `main` stable; no breaking pushes; README states the exact commit judged.
 
 ## 8. Definition of "demo-ready" (go/no-go on Oct 20)
 

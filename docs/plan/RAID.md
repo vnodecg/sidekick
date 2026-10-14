@@ -6,7 +6,7 @@ Last reviewed: 2026-10-13 · Review daily at EOD. Status: `open | mitigating | c
 
 | ID | Risk | L | I | Score | Mitigation | Owner | Status |
 |---|---|---|---|---|---|---|---|
-| R1 | Bedrock slow/unavailable/throttled; demo stalls | 2 | 3 | 6 | 2.5 s timeout, one retry, 4.5 s budget, fallback, mock mode, pre-recorded backup take of the demo | Eng | open |
+| R1 | Bedrock slow/unavailable/throttled; demo stalls | 2 | 3 | 6 | Timeout, retry and fallback (AI-BEDROCK §1, §7); mock mode; pre-recorded backup take of the demo | Eng | open |
 | R2 | SQLite on Lambda loses data | 1 | 2 | 2 | Not deploying to Lambda; README says so; Docker volume | Eng | mitigating |
 | R3 | SDK does not implement spec 2025-11-25 as required | 2 | 3 | 6 | Spike T-003 first; upgrade within v1.x; document negotiated version as friction-log item | Eng | open |
 | R4 | No AWS credits; Bedrock model access not enabled in region | 2 | 3 | 6 | Confirm access Oct 14 (Q1); mock elsewhere; budget cap alarm; calls only for T-011, rehearsal, demo | Eng | open |
@@ -17,7 +17,7 @@ Last reviewed: 2026-10-13 · Review daily at EOD. Status: `open | mitigating | c
 | R9 | Rule-based router feels brittle, judges type odd phrases | 2 | 2 | 4 | Fallback to `what_now`; bonus assistant demo shows LLM routing; debug panel; grammar tests | Eng | open |
 | R10 | Banned-word/echo rule collides with user text | 2 | 1 | 2 | Echo exemption defined in SAFETY-COPY §3 | Eng | mitigating |
 | R11 | Crisis keyword screen misses or over-triggers | 2 | 3 | 6 | Documented limits; no detection claims; review list T-051 | Eng | open |
-| R12 | Local server with destructive tool reachable by web pages | 2 | 3 | 6 | Loopback bind, Origin allow-list, confirm flag, optional token | Eng | mitigating |
+| R12 | Local server with destructive tool reachable by web pages | 2 | 3 | 6 | PROTOCOL §3 controls; confirm flag (ADR-012) | Eng | mitigating |
 | R13 | Judges run on a different OS/Node and fail to start | 2 | 3 | 6 | Clean-clone rehearsal T-053; Docker path; mock default if no AWS env | Eng | open |
 | R14 | Starter's deps stale/vulnerable | 1 | 1 | 1 | `npm audit` once before freeze | Eng | open |
 | R15 | "Sidekick" name conflict | 2 | 2 | 4 | T-075 early; fallback name decided in advance (Q6) | PM | open |
@@ -28,7 +28,7 @@ Last reviewed: 2026-10-13 · Review daily at EOD. Status: `open | mitigating | c
 |---|---|---|---|---|
 | A1 | Web client uses a rule-based router; Bedrock stays only in `break_down_task` | If an LLM router is wanted, add a second Bedrock call and update privacy text | ADR-007 | open |
 | A2 | `delete_my_data` requires `confirm: true` | Remove the flag; one-call delete | ADR-012 | open |
-| A3 | `sort_dump` is spoken as one comma-joined sentence of <= 5 items | Alternative: read one item per call | TOOLS §8 | open |
+| A3 | `sort_dump` is spoken as one comma-joined sentence of <= 5 items | Alternative: read one item per call | TOOLS §3 | open |
 | A4 | "Due routine" = `time_of_day` reached (or no time) and not done today | Needs a different rule for recurrence | TOOLS §5 | open |
 | A5 | Active task = latest-updated open parent; others stay open | Maybe auto-pause others | TOOLS §0 | open |
 | A6 | Extended banned-word list beyond PRD's four | Drop extras if too strict | SAFETY-COPY §2 | open |
@@ -57,8 +57,4 @@ None yet. Log with: ID `I#`, date, description, impact, owner, status.
 
 ## Decisions log
 
-Architecture decisions: [../architecture/DECISIONS.md](../architecture/DECISIONS.md). Product/scope decisions made after PRD v1 go in this table.
-
-| Date | Decision | By |
-|---|---|---|
-| 2026-10-13 | Build on TypeScript starter; PRD's Python references superseded | Eng (ADR-001) |
+Architecture decisions: [../architecture/DECISIONS.md](../architecture/DECISIONS.md). Product/scope decisions made after PRD v1 go in a `Date | Decision | By` table here; none yet.

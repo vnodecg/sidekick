@@ -117,7 +117,7 @@ IDs are stable. "Reqs" refers to PRD IDs or derived IDs in the traceability matr
 ## 3. Exit criteria
 
 - Unit/tool/protocol suites green in CI on Node 22 and 24.
-- TC-002..009, TC-040, TC-060..062 are release blockers.
+- Release blockers: the go/no-go gates in [PLAN.md](PLAN.md) §8.
 - No test depends on network or AWS unless `SIDEKICK_LIVE=1`.
 
 ## 4. Coverage
