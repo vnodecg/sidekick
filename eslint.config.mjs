@@ -269,6 +269,6 @@ export default tseslint.config(
   },
   {
     // Ignore build output and common directories
-    ignores: ['build/**', 'dist/**', 'node_modules/**', 'coverage/**', 'docs/**', 'eslint.config.mjs', 'drizzle.config.ts', 'dev.js', '_templates/**', 'tests/helpers/*.mjs'],
+    ignores: ['build/**', 'dist/**', 'node_modules/**', 'coverage/**', 'docs/**', 'eslint.config.mjs', 'drizzle.config.ts', 'dev.js', 'scripts/**', '_templates/**', 'tests/helpers/*.mjs'],
   }
 );

@@ -3,5 +3,5 @@ export const UNBLOCKERS = [
   "Put both feet on the floor and shake out your hands.",
   "Take a sip of water and look out of the window for ten seconds.",
   "Walk to another room and come back.",
-  "Set a timer for two minutes and just open what you need.",
+  "Set a timer for two minutes and open what you need.",
 ] as const;

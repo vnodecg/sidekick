@@ -2,6 +2,7 @@ import { z } from "zod";
 import { READ_ONLY, WRITES } from "../core/annotations.js";
 import { localMoment } from "../core/clock.js";
 import { freeText, takeText } from "../core/input.js";
+import { crisisReply, screen } from "../core/safety.js";
 import { resolveUserId } from "../core/user.js";
 import { addRoutine, dueRoutine, findRoutine, markRoutineDone } from "../repos/routines.js";
 import type { AppContext } from "../context.js";
@@ -62,6 +63,7 @@ function registerRoutineDone(server: McpServer, ctx: AppContext): void {
     },
     ({ name }) => {
       const wanted = (name ?? "").trim();
+      if (screen(wanted)) return crisisReply(ctx.speak);
       const routine = wanted === "" ? dueNow(ctx) : findRoutine(ctx.db, resolveUserId(), wanted);
       if (routine === undefined) {
         return ctx.speak({ template: wanted === "" ? NOTHING_WAITING : "I don't have a routine called that." });

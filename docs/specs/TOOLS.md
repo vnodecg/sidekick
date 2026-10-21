@@ -22,7 +22,7 @@ Status: Draft v1 · Covers F1–F14 · Reply rules: [SAFETY-COPY.md](SAFETY-COPY
 - **Behaviour:** screen -> `ai/breakdown` (see [AI-BEDROCK.md](AI-BEDROCK.md)) -> tx: insert parent (`position 0`) + steps (`1..n`, status open) -> reply = first step only (AC3). Existing open tasks stay open; new task becomes active.
 - **Reply:** `"Okay. First tiny step: {step1}."` (exact form) Max 2 sentences. Never mentions count of steps. Never mentions the AI.
 - **`_meta`:** `{taskId, source: "ai"|"fallback"|"mock", latencyMs, stepCount}`.
-- **Empty input:** "What do you need to get started on?"
+- **Empty input:** "What would you like to get started on?"
 - **Tests:** TC-001..009, TC-070.
 
 ### `next_step` · F2 · P0

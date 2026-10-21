@@ -35,7 +35,7 @@ Tools may repeat the user's own words (step text, parked note, dump items). To k
 
 ## 4. Enforcement
 
-- **Build time:** `tests/reply-lint.test.ts` calls every tool through the real MCP server with realistic and hostile inputs and checks §1/§2 on `content[0].text` (TC-060, TC-061).
+- **Build time:** `tests/reply-lint.test.ts` finds every tool from `tools/list`, calls each in three states (empty, busy, routine due) with realistic and hostile inputs and checks §1/§2 on `content[0].text` (TC-060, TC-061). `tests/copy-scan.test.ts` reads the string literals of every spoken source file and rejects banned words and the §5 discouraged phrases (TC-062); `description:` and `.describe()` text is for the model and is skipped.
 - **Run time:** `speak()` throws in `NODE_ENV=test`; in production it logs `{tool, rule}` (no text) and returns the safe sentence "Okay. I've got that." A `speak` violation is a P1 bug.
 - **Template registry:** all templates live as constants next to each tool, so a grep-based test (TC-062) can lint source strings too.
 
@@ -56,6 +56,7 @@ Tools may repeat the user's own words (step text, parked note, dump items). To k
   > "I'm really glad you told me. You deserve support right now, so please contact your local emergency number or a crisis line, or reach someone you trust nearby. I'm here for small tasks whenever you want."
 
 - Region-neutral on purpose (no hard-coded number). README documents that deployers may extend the text via `SIDEKICK_CRISIS_TEXT` (P1).
+- **Tests:** `tests/crisis.test.ts` finds every free-text input from the tool schemas (strings and string arrays, not enums or patterns) and checks that each answers a crisis phrase with the text above, stores nothing in any table and makes no model call (TC-064). Near misses are in `tests/core/safety.test.ts` (TC-065).
 - **Limits (documented, not hidden):** keyword screening has false negatives and false positives. It is a safeguard for a productivity aid, not a clinical tool. Reviewed in T-051; do not claim detection in the submission text.
 - The reply is exempt from the 3-sentence limit only if it stays at 3; it is written to fit.
 
@@ -74,3 +75,15 @@ Tools may repeat the user's own words (step text, parked note, dump items). To k
 | Logs | stderr JSON lines | `{ts, event, tool?, ok?, ms?, errClass?}` (plus `module`/`detail` for startup diagnostics only). Lint rule: no `console.*` outside `core/log.ts` |
 | `ai_calls` | SQLite | model, attempt, success, error class, latency. No text |
 | Telemetry | none | no third-party analytics |
+
+## 9. Copy review (T-052)
+
+Every spoken string was read against §2 and §5 on 2026-10-14 and `tests/copy-scan.test.ts` keeps it true.
+
+| Check | Result |
+|---|---|
+| Banned words (§2) in templates, seed ideas, unblockers, fallback and mock steps, web client strings | none |
+| "just", "simply", "you should", "you need to" (§5) | two found and fixed: an unblocker ("... and just open what you need") and the empty-task prompt, now "What would you like to get started on?". "just now" in the server-fault line is a time phrase and is allowed |
+| Counts of unfinished or dropped things | none; only wins and saved items are counted |
+| Time pressure or comparison | none; `time_check` says "no rush" once a plan is passed and never "over" or "behind" |
+| Every sentence is 25 words or fewer on realistic input | holds (checked by `tests/reply-lint.test.ts`) |

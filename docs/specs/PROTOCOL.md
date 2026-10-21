@@ -77,7 +77,7 @@ The client keeps two router inputs: `hasActiveTask` (from `_meta.taskOpen`) and 
 | "done", "finished", "did it", "next" while a task is open (otherwise falls through to the fallbacks) | `complete_step` |
 | "what's next", "next step" | `next_step` |
 | "i'm stuck", "frozen", "can't move" | `im_stuck` |
-| "i can't start", "i need to ...", "help me ...", "i have to ..." | `break_down_task` (task = remainder with a leading "with/on/to" dropped; no remainder -> no `task`, so the tool asks "What do you need to get started on?") |
+| "i can't start", "i need to ...", "help me ...", "i have to ..." | `break_down_task` (task = remainder with a leading "with/on/to" dropped; no remainder -> no `task`, so the tool asks "What would you like to get started on?") |
 | "start focus", "starting work on ..." | `start_focus` (`label` = remainder, `minutes` from "for 25 minutes") |
 | "how long", "time check" | `time_check` |
 | "i'm done working", "stop the timer" | `end_focus` |

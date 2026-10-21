@@ -13,9 +13,9 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 | WS1 Task initiation + Bedrock | 6 | 5 | 17.5 |
 | WS2 Protocol + web client | 6 | 5 | 20 |
 | WS3 Remaining tools | 10 | 10 | 20 |
-| WS4 Quality | 6 | 0 | 11.5 |
+| WS4 Quality | 6 | 4 | 11.5 |
 | WS5 Freeze + submission | 10 | 0 | 21 |
-| **Total** | **45** | **27** | **107** |
+| **Total** | **45** | **31** | **107** |
 | of which P0 only | | | 95 (incl. 3 h already done) |
 
 > Capacity and cut order: [PLAN.md](PLAN.md) §4.
@@ -73,12 +73,12 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 
 | ID | Task | Pri | Reqs | Deps | Est | Status | Done when |
 |---|---|---|---|---|---|---|---|
-| T-050 | `reply-lint` test: every registered tool x realistic and hostile inputs vs AC1/AC2 (auto-discovers tools from `tools/list`, so new tools are covered) | P0 | AC1, AC2 | all P0 tools | 3 | todo | TC-060..062 green |
-| T-051 | Safety: crisis screen tests on every free-text tool, document limits in README | P0 | NF6, §11 | T-031, T-013 | 2 | todo | TC-064, TC-065 |
-| T-052 | Copy review pass over every spoken string vs SAFETY-COPY §5 | P0 | AC2, P3 | all tools | 1.5 | todo | checklist signed in PR |
-| T-053 | Hero-flow script (`scripts/hero.mjs`) under 60 s from clean clone, mock mode, and with Bedrock | P0 | §12 | T-021 | 2 | todo | TC-100, TC-101 |
-| T-054 | `knip`, lint, typecheck clean; CI required | P0 | DoD | all | 1.5 | todo | CI green on main |
-| T-055 | Privacy audit: grep logs for content, inspect Bedrock request payload, confirm `ai_calls` has no text | P0 | NF2, §8 | T-012 | 1.5 | todo | TC-066, TC-067 |
+| T-050 | `reply-lint` test: every registered tool x realistic and hostile inputs vs AC1/AC2 (auto-discovers tools from `tools/list`, so new tools are covered) | P0 | AC1, AC2 | all P0 tools | 3 | done | TC-060..062 green |
+| T-051 | Safety: crisis screen tests on every free-text tool, document limits in README | P0 | NF6, §11 | T-031, T-013 | 2 | done | TC-064, TC-065 |
+| T-052 | Copy review pass over every spoken string vs SAFETY-COPY §5 | P0 | AC2, P3 | all tools | 1.5 | done | checklist signed in PR |
+| T-053 | Hero-flow script (`scripts/hero.mjs`) under 60 s from clean clone, mock mode, and with Bedrock | P0 | §12 | T-021 | 2 | doing | TC-100, TC-101 |
+| T-054 | `knip`, lint, typecheck clean; CI required | P0 | DoD | all | 1.5 | doing | CI green on main |
+| T-055 | Privacy audit: grep logs for content, inspect Bedrock request payload, confirm `ai_calls` has no text | P0 | NF2, §8 | T-012 | 1.5 | done | TC-066, TC-067 |
 
 ## WS5 Freeze + submission
 
@@ -102,3 +102,4 @@ Requirement refs: `F#`/`AC#`/`NF#` (see [TRACEABILITY.md](../TRACEABILITY.md)). 
 | Initial breakdown from PRD v1 |
 | T-024 `doing`: built and verified in headless Chrome (typed flow, 320 px, Lighthouse accessibility 100). Still open: the device rows of TEST-PLAN §6 (mic and speech on Chrome desktop and Android, Safari/Firefox typed fallback, screen reader, dark mode and reduced motion by eye) |
 | WS3 `done` (T-030..T-034, T-040..T-044): all 24 tools shipped. `what_now` ranking lives in `core/suggest.ts` and is shared with `pick_for_me`. Decisions recorded in TOOLS.md §1–§6: `sort_dump` asks no follow-up question; the no-options `pick_for_me` returns the `what_now` sentence; tools that advance the break-idea rotation are not marked read-only. T-044 adds `SIDEKICK_ALLOW_OPEN_BIND` so Docker (container binds 0.0.0.0, host port is loopback-only) still starts without a token |
+| WS4 (T-050..T-055): T-050, T-051, T-052, T-055 `done`. Reply-lint, crisis and privacy suites discover tools from `tools/list`, so new tools are covered with no edit. Fixes found on the way: `routine_done` now screens its name for crisis phrases; one unblocker lost a "just"; the empty `break_down_task` prompt now reads "What would you like to get started on?" (avoids the discouraged "you need to"). T-053 `doing`: `npm run hero` and TC-100 pass in mock mode; TC-101 needs Bedrock access (Q1) and `npm run hero -- --bedrock` has not been run. T-054 `doing`: lint, typecheck, knip and tests are clean locally and CI runs all four; "CI green on main" and making CI a required check need the GitHub remote |

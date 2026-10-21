@@ -46,8 +46,8 @@ describe("break_down_task", () => {
 
   it("asks one question for empty input without writing", async () => {
     const { tool, made } = await setup();
-    assert.strictEqual((await tool.call("break_down_task", { task: "   " })).text, "What do you need to get started on?");
-    assert.strictEqual((await tool.call("break_down_task")).text, "What do you need to get started on?");
+    assert.strictEqual((await tool.call("break_down_task", { task: "   " })).text, "What would you like to get started on?");
+    assert.strictEqual((await tool.call("break_down_task")).text, "What would you like to get started on?");
     assert.strictEqual(countRows(made.ctx.db, tasks), 0);
   });
 

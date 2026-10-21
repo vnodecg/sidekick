@@ -33,7 +33,7 @@ function registerBreakDown(server: McpServer, ctx: AppContext): void {
     },
     async ({ task }) => {
       const title = (task ?? "").trim();
-      if (title === "") return ctx.speak({ template: "What do you need to get started on?" });
+      if (title === "") return ctx.speak({ template: "What would you like to get started on?" });
       if (screen(title)) return crisisReply(ctx.speak);
       const { steps, source, latencyMs } = await breakDown(ctx, title);
       const taskId = createTask(ctx.db, { userId: resolveUserId(), title, steps, source, now: ctx.clock.now() });

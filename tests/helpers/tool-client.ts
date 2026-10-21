@@ -4,7 +4,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { AppContext } from "../../src/context.js";
 import type { RegisterableModule } from "../../src/registry/types.js";
 
+export type ToolInfo = { name: string; inputSchema: Record<string, unknown> };
+
 export type ToolClient = {
+  tools: () => Promise<Array<ToolInfo>>;
   call: (name: string, args?: Record<string, unknown>) => Promise<{ text: string; meta: Record<string, unknown> | undefined; isError: boolean }>;
   close: () => Promise<void>;
 };
@@ -20,6 +23,7 @@ export async function connectModules(modules: Array<RegisterableModule>, ctx: Ap
   const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
   await Promise.all([server.connect(serverSide), client.connect(clientSide)]);
   return {
+    tools: async () => (await client.listTools()).tools.map(({ name, inputSchema }) => ({ name, inputSchema })),
     call: async (name, args = {}) => {
       const result = await client.callTool({ name, arguments: args });
       const block = (result.content as Array<{ type: string; text?: string }>)[0];

@@ -104,6 +104,7 @@ Full list: [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md
 - Data stays in the local SQLite file. `delete_my_data` erases it (it asks for confirmation first).
 - Logs record tool names and timings, never what you said. The `ai_calls` table stores model, success and latency, no text.
 - If a message suggests crisis or self-harm risk, Sidekick stores nothing and encourages contacting local emergency services, a crisis line or someone nearby. This is a simple keyword safeguard and will miss things; it is not a clinical tool.
+- Limits of the crisis screen: it matches a fixed list of phrases (see `src/core/lexicon.ts`), so indirect wording such as "I can't do this anymore" is not caught, and a harmless sentence that contains a listed phrase ("I want to die laughing") is. Ordinary near misses such as "this task is killing me" or "kill the process" pass through as normal tasks. Deployers should treat it as a safeguard for a productivity aid and not as detection.
 
 ## Known limits
 
@@ -119,6 +120,7 @@ Full list: [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md
 npm run build        # compile TypeScript
 npm test             # node --test
 npm run lint && npm run typecheck
+npm run hero         # hero flow over real HTTP in mock mode (add -- --bedrock for a real model)
 npm run inspect      # MCP Inspector (stdio)
 npm run inspect:http # MCP Inspector against http://localhost:3000/mcp
 ```
