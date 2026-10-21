@@ -110,8 +110,10 @@ async function main() {
     problems = await run(port);
   } finally {
     server.child.removeAllListeners("exit");
+    const exited = new Promise((resolve) => server.child.once("exit", resolve));
     server.child.kill();
-    rmSync(scratch, { recursive: true, force: true });
+    await exited;
+    rmSync(scratch, { recursive: true, force: true, maxRetries: 5 });
   }
   console.log(`\n${bedrock ? "bedrock" : "mock"} mode, ${((performance.now() - started) / 1000).toFixed(1)} s`);
   if (problems.length > 0) throw new Error(problems.join("; "));

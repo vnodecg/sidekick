@@ -39,7 +39,7 @@ function jsonFetch(replies: Array<{ status?: number; headers?: Record<string, st
         headers: { "Content-Type": "application/json", ...next.headers },
       }),
     );
-  }) as typeof fetch;
+  });
 }
 
 describe("mcp-client against the server (TC-046)", () => {
@@ -106,7 +106,7 @@ describe("mcp-client edge cases", () => {
     const { client } = clientFor("http://unused.test", ((url, init) => {
       calls.push(init?.headers as Record<string, string>);
       return scripted(url, init);
-    }) as typeof fetch);
+    }));
     assert.deepStrictEqual(await client.listTools(), []);
     const listCall = calls[2];
     assert.deepStrictEqual([listCall?.["Mcp-Session-Id"], listCall?.["MCP-Protocol-Version"]], ["abc", "2025-06-18"]);

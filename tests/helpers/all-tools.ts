@@ -1,5 +1,4 @@
 import { readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { makeContext } from "./context.js";
 import { connectModules } from "./tool-client.js";
@@ -47,7 +46,7 @@ const fit = (text: string, maxLength: number | undefined): string => text.slice(
 async function loadToolModules(): Promise<Array<RegisterableModule>> {
   const files = readdirSync(TOOLS_DIR).filter((file) => file.endsWith(".ts"));
   const modules = await Promise.all(
-    files.map(async (file) => (await import(fileURLToPath(new URL(file, TOOLS_DIR)))) as { default: RegisterableModule }),
+    files.map(async (file) => (await import(new URL(file, TOOLS_DIR).href)) as { default: RegisterableModule }),
   );
   return modules.map((module) => module.default);
 }
