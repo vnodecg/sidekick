@@ -1,5 +1,5 @@
 import * as path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import fastGlob from "fast-glob";
 
 /**
@@ -26,11 +26,8 @@ export function filePathToUrl(filePath: string): string {
  * @returns Array of glob patterns for module discovery
  */
 export function getModulePatterns(rootDir: string): Array<string> {
-  return [
-    path.join(rootDir, "tools", "*.js"),
-    path.join(rootDir, "resources", "*.js"),
-    path.join(rootDir, "prompts", "*.js"),
-  ];
+  const root = fastGlob.convertPathToPattern(rootDir);
+  return [`${root}/tools/*.js`, `${root}/resources/*.js`, `${root}/prompts/*.js`];
 }
 
 /**
@@ -39,7 +36,7 @@ export function getModulePatterns(rootDir: string): Array<string> {
  * @returns The root directory path
  */
 export function getRootDir(importMetaUrl: string): string {
-  return path.dirname(path.dirname(new URL(importMetaUrl).pathname));
+  return path.dirname(path.dirname(fileURLToPath(importMetaUrl)));
 }
 
 /**
