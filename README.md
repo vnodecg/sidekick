@@ -10,7 +10,7 @@ Built for the Amazon Developer Hackathon: Alexa+ track and AWS Builder mini chal
 
 ## Status
 
-**Planning complete, implementation starting (2026-10-13).** The starter demo modules have been removed; the commands under *Quick start* describe the target and become real as tasks land. Track progress in [docs/plan/TASKS.md](docs/plan/TASKS.md).
+All 24 tools and the web client are implemented and run in mock mode. Real Amazon Bedrock calls need an API key (see *With Amazon Bedrock*). Track progress in [docs/plan/TASKS.md](docs/plan/TASKS.md).
 
 ## What it does
 
@@ -49,30 +49,33 @@ You (voice/typing) -> web client -> POST /mcp (tools/call) -> Sidekick server ->
 - **Everything else is deterministic** and runs locally against one SQLite file.
 - **Any MCP client** can use the same `/mcp` endpoint (MCP Inspector, Claude Desktop, and so on).
 
-## Quick start (target)
+## Quick start
 
-Requirements: Node.js >= 22.13.
+Requirements: Node.js >= 22.13. The commands work on macOS, Linux and Windows (PowerShell: use `Copy-Item .env.example .env`).
 
 ```bash
 npm ci
+cp .env.example .env      # loaded automatically; mock mode is on by default
 npm start                 # builds, serves the web client and /mcp on http://127.0.0.1:3000
 ```
 
-Open http://127.0.0.1:3000, tap the mic (Chrome or Edge) or type.
+Open http://127.0.0.1:3000, tap the mic (Chrome or Edge) or type. `http://127.0.0.1:3000/healthz` reports `"mockAi": true` when running without AWS.
 
 ### Without AWS (mock steps, no cost)
 
-```bash
-SIDEKICK_MOCK_AI=1 npm start
-```
+Keep `SIDEKICK_MOCK_AI=1` in `.env` (the default in `.env.example`), or run `SIDEKICK_MOCK_AI=1 npm start`.
 
 ### With Amazon Bedrock
 
+In `.env`, remove `SIDEKICK_MOCK_AI=1` and set:
+
 ```bash
-export AWS_REGION=us-east-1                      # a region where you have model access
-export SIDEKICK_BEDROCK_MODEL_ID=<model-or-inference-profile-id>
-npm start                                        # needs AWS_BEARER_TOKEN_BEDROCK in the environment
+AWS_REGION=us-east-1                      # a region where you have model access
+SIDEKICK_BEDROCK_MODEL_ID=<model-or-inference-profile-id>
+AWS_BEARER_TOKEN_BEDROCK=<your Bedrock API key>
 ```
+
+Then `npm start`. Check `/healthz` shows `"mockAi": false`, and `npm run hero -- --bedrock` should report `source: ai` for `break_down_task`.
 
 Open the "Tool calls" drawer in the page to see the real `initialize`, `tools/list` and `tools/call` traffic and a `source` chip (`bedrock`, `fallback`, `mock`).
 

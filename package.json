@@ -7,7 +7,7 @@
   "scripts": {
     "test": "node --import ./tests/helpers/register-ts.mjs --test \"tests/**/*.test.ts\"",
     "test:watch": "node --import ./tests/helpers/register-ts.mjs --test --watch \"tests/**/*.test.ts\"",
-    "build": "tsc && rm -rf build/db/migrations && cp -r src/db/migrations build/db/ && rm -rf build/web && cp -r src/web build/web && chmod 755 build/index.js",
+    "build": "tsc && node scripts/copy-assets.mjs",
     "db:generate": "drizzle-kit generate",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -24,7 +24,7 @@
     "knip:production": "knip --production",
     "knip:fix": "knip --fix",
     "hero": "npm run build && node scripts/hero.mjs",
-    "start": "npm run build && STARTER_TRANSPORT=http node --disable-warning=ExperimentalWarning build/index.js"
+    "start": "npm run build && node --disable-warning=ExperimentalWarning --import ./scripts/http-transport.mjs build/index.js"
   },
   "keywords": [
     "mcp",

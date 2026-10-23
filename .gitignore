@@ -19,3 +19,9 @@ build/tests/
 .headroom
 .headroom*
 .serena
+
+# SQLite data (never commit)
+data/
+*.db
+*.db-shm
+*.db-wal
