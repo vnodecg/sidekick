@@ -37,7 +37,7 @@
     "node": ">=22.13"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.1151.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1153.0",
     "@modelcontextprotocol/sdk": "^1.32.1",
     "dotenv": "^17.2.3",
     "drizzle-orm": "1.0.0-rc.4",
